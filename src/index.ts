@@ -1,12 +1,14 @@
 import express from "express";
 import sequelize from "./config/database";
 import userRoutes from "./routes/userRoutes";
+import bookRoutes from "./routes/bookRoutes";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 app.use(userRoutes);
+app.use(bookRoutes);
 
 sequelize
   .sync({ alter: true })
