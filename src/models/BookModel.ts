@@ -30,8 +30,9 @@ BookModel.init(
   },
   {
     sequelize,
-    modelName: "BookModel",
+    modelName: "Book",
     tableName: "books",
   }
 );
+
 export default BookModel;

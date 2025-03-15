@@ -3,12 +3,7 @@ import sequelize from "../config/database";
 import UserModel from "./UserModel";
 import BookModel from "./BookModel";
 
-class AssessmentModel extends Model {
-  id: number | undefined;
-  userId: number | undefined;
-  bookId: number | undefined;
-  score: number | undefined;
-}
+class AssessmentModel extends Model {}
 
 AssessmentModel.init(
   {
@@ -36,6 +31,10 @@ AssessmentModel.init(
     score: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 1,
+        max: 10,
+      },
     },
     comment: {
       type: DataTypes.STRING,
@@ -44,21 +43,16 @@ AssessmentModel.init(
   },
   {
     sequelize,
-    modelName: "AssessmentModel",
+    modelName: "Assessment",
     tableName: "assessments",
   }
 );
 
-UserModel.belongsToMany(BookModel, {
-  through: AssessmentModel,
-  foreignKey: "userId",
-  as: "assessedBooks",
-});
+// Configuração de relacionamentos
+UserModel.hasMany(AssessmentModel, { foreignKey: "userId", as: "assessments" });
+BookModel.hasMany(AssessmentModel, { foreignKey: "bookId", as: "assessments" });
 
-BookModel.belongsToMany(UserModel, {
-  through: AssessmentModel,
-  foreignKey: "bookId",
-  as: "assessors",
-});
+AssessmentModel.belongsTo(UserModel, { foreignKey: "userId", as: "user" });
+AssessmentModel.belongsTo(BookModel, { foreignKey: "bookId", as: "book" });
 
 export default AssessmentModel;
