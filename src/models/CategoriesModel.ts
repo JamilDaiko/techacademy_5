@@ -1,5 +1,6 @@
 import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
+import BookModel from "./BookModel";
 
 class CategoriesModel extends Model {
   static findByIdAndUpdate(id: string, body: any, arg2: { new: boolean }) {
@@ -27,5 +28,14 @@ CategoriesModel.init(
     tableName: "categories",
   }
 );
+
+BookModel.belongsToMany(CategoriesModel, {
+  through: "books_categories",
+  as: "categories",
+});
+CategoriesModel.belongsToMany(BookModel, {
+  through: "books_categories",
+  as: "books",
+});
 
 export default CategoriesModel;

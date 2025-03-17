@@ -1,5 +1,6 @@
 import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
+import BookModel from "./BookModel";
 
 class AuthorsModel extends Model {
   id: number | undefined;
@@ -29,5 +30,14 @@ AuthorsModel.init(
     tableName: "authors",
   }
 );
+
+BookModel.belongsToMany(AuthorsModel, {
+  through: "books_authors",
+  as: "authors",
+});
+AuthorsModel.belongsToMany(BookModel, {
+  through: "books_authors",
+  as: "books",
+});
 
 export default AuthorsModel;

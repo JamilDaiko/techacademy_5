@@ -4,6 +4,7 @@ import userRoutes from "./routes/userRoutes";
 import bookRoutes from "./routes/bookRoutes";
 import categoryRoutes from "./routes/categoriesRoute";
 import assessmentRoutes from "./routes/assessmentRoutes";
+import authorRoutes from "./routes/authorRoutes";
 
 const app = express();
 const port = 3000;
@@ -13,6 +14,7 @@ app.use(userRoutes);
 app.use(bookRoutes);
 app.use(categoryRoutes);
 app.use(assessmentRoutes);
+app.use(authorRoutes);
 
 sequelize
   .sync({ alter: true })
