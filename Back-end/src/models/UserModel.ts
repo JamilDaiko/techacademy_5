@@ -8,6 +8,11 @@ class UserModel extends Model {
   email: string | undefined;
   password: string | undefined;
   cpf: string | undefined;
+
+  public async validatePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password!);
+  }
+  
   public async hashPassword() {
     this.password = await bcrypt.hash(this.password!, 10);
   }
