@@ -19,7 +19,7 @@ export function MenuHeader() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className=" bg-[#E8F1F2]">Menu</Button>
+        <Button variant="outline" className=" bg-[#E8F1F2] font-light">Edit Profile</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
