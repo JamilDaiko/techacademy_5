@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserModel from "../models/UserModel";
+import { createUser as createUserService } from "../services/UserService";
 
 // método que busca todos
 export const getAll = async (req: Request, res: Response) => {
@@ -21,26 +22,14 @@ export const getUserById = async (
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, cpf } = req.body;
-
-    if (
-      !name ||
-      name === "" ||
-      !email ||
-      email === "" ||
-      !password ||
-      password === "" ||
-      !cpf ||
-      cpf === ""
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Name, email, password, and cpf are required" });
-    }
-
-    const user = await UserModel.create({ name, email, password, cpf });
-    res.status(201).json(user);
+    const user = await createUserService(name, email, password, cpf);
+    res.status(201).json({ message: "Usuário criado com sucesso", user });
   } catch (error) {
-    res.status(500).json("Erro interno no servidor " + error);
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "Unknown error" });
+    }
   }
 };
 
@@ -50,7 +39,7 @@ export const updateUser = async (
   res: Response
 ) => {
   try {
-    const { name, email, password, cpf } = req.body;
+    const { name, email, password } = req.body;
 
     const user = await UserModel.findByPk(req.params.id);
     if (!user) {
@@ -65,9 +54,6 @@ export const updateUser = async (
     }
     if (password && password !== "") {
       user.password = password;
-    }
-    if (cpf && cpf !== "") {
-      user.cpf = cpf;
     }
 
     await user.save();

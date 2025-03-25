@@ -1,8 +1,9 @@
 import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
 import BookModel from "./BookModel";
+import Book from "./BookModel";
 
-class CategoriesModel extends Model {
+class Categories extends Model {
   static findByIdAndUpdate(id: string, body: any, arg2: { new: boolean }) {
     throw new Error("Method not implemented.");
   }
@@ -10,7 +11,7 @@ class CategoriesModel extends Model {
   categoria: string | undefined;
 }
 
-CategoriesModel.init(
+Categories.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -29,13 +30,13 @@ CategoriesModel.init(
   }
 );
 
-BookModel.belongsToMany(CategoriesModel, {
+BookModel.belongsToMany(Categories, {
   through: "books_categories",
   as: "categories",
 });
-CategoriesModel.belongsToMany(BookModel, {
+Categories.belongsToMany(Book, {
   through: "books_categories",
   as: "books",
 });
 
-export default CategoriesModel;
+export default Categories;
