@@ -1,14 +1,14 @@
 import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
 
-class BookModel extends Model {
+class Book extends Model {
   id: number | undefined;
   title: string | undefined;
   description: string | undefined;
   date_published: Date | undefined;
 }
 
-BookModel.init(
+Book.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -35,4 +35,4 @@ BookModel.init(
   }
 );
 
-export default BookModel;
+export default Book;

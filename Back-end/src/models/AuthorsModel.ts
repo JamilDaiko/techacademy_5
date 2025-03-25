@@ -2,13 +2,13 @@ import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
 import BookModel from "./BookModel";
 
-class AuthorsModel extends Model {
+class Authors extends Model {
   id: number | undefined;
   name: string | undefined;
   biography: string | undefined;
 }
 
-AuthorsModel.init(
+Authors.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -26,18 +26,18 @@ AuthorsModel.init(
   },
   {
     sequelize,
-    modelName: "AuthorsModel",
+    modelName: "Authors",
     tableName: "authors",
   }
 );
 
-BookModel.belongsToMany(AuthorsModel, {
+BookModel.belongsToMany(Authors, {
   through: "books_authors",
   as: "authors",
 });
-AuthorsModel.belongsToMany(BookModel, {
+Authors.belongsToMany(BookModel, {
   through: "books_authors",
   as: "books",
 });
 
-export default AuthorsModel;
+export default Authors;
