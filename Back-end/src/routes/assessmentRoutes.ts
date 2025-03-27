@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { getAllAssement } from "../controllers/assessmentController";
+import {
+  getAllAssement,
+  addComment,
+} from "../controllers/assessmentController";
 
 const router = Router();
 
-router.get("/", getAllAssement);
+router.get("/assement", getAllAssement);
+router.post("/assement/addComent", addComment);
 
 export default router;
