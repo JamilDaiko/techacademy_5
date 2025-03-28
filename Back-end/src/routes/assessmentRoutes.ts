@@ -8,6 +8,6 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const router = Router();
 
 router.get("/assement", getAllAssement);
-router.post("/assement/addComent", authMiddleware, addComment);
+router.post("/books/:id/assement/addComent", authMiddleware, addComment);
 
 export default router;
