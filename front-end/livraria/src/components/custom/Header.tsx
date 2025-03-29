@@ -1,5 +1,4 @@
 import logoBook from "../../assets/logo-book.svg";
-import { MenuHeader } from "./MenuHeader";
 
 const Header: React.FC = () => {  
   return (
@@ -13,15 +12,21 @@ const Header: React.FC = () => {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8 text-lg font-light text-black">
-          {["Home", "About", "Contact", "Assinature"].map((item) => (
-            <li key={item} className="transition hover:text-gray-800 cursor-pointer">
-              {item}
+          {[
+            { label: "Inicio", path: "/" },
+            { label: "Sobre", path: "/sobre" },
+            { label: "Contato", path: "/contato" },
+            { label: "Favoritos", path: "/favoritos" },
+            { label: "Minha Estante", path: "/minha-estante" },
+            { label: "Minha Conta", path: "/minha-conta" },
+          ].map((item) => (
+            <li key={item.label} className="transition hover:text-gray-800 cursor-pointer">
+              <a href={item.path}>{item.label}</a>
             </li>
           ))}
         </ul>
       </nav>
 
-      <MenuHeader/>
     </header>
   );
 };
