@@ -1,8 +1,5 @@
 import UserModel from "../models/UserModel";
 
-/**
- * Valida se todos os campos obrigatórios foram fornecidos.
- */
 const validateFields = (
   name: string,
   email: string,
@@ -14,9 +11,6 @@ const validateFields = (
   }
 };
 
-/**
- * Valida se a senha atende aos requisitos mínimos.
- */
 const validatePassword = (password: string) => {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -28,9 +22,6 @@ const validatePassword = (password: string) => {
   }
 };
 
-/**
- * Valida se o CPF tem o formato correto (11 números).
- */
 const validateCPF = (cpf: string) => {
   const cpfRegex = /^\d{11}$/;
 
@@ -39,9 +30,6 @@ const validateCPF = (cpf: string) => {
   }
 };
 
-/**
- * Verifica se um e-mail já está cadastrado no banco.
- */
 const checkIfEmailExists = async (email: string) => {
   const existingUser = await UserModel.findOne({ where: { email } });
   if (existingUser) {
@@ -49,9 +37,6 @@ const checkIfEmailExists = async (email: string) => {
   }
 };
 
-/**
- * Cria um novo usuário após todas as validações.
- */
 export const createUser = async (
   name: string,
   email: string,
@@ -63,6 +48,5 @@ export const createUser = async (
   validateCPF(cpf);
   await checkIfEmailExists(email);
 
-  // Criar usuário no banco
   return await UserModel.create({ name, email, password, cpf });
 };

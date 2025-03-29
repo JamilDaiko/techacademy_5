@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { getAllAssement } from "../controllers/assessmentController";
+import {
+  getAllAssement,
+  addComment,
+} from "../controllers/assessmentController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = Router();
 
-router.get("/", getAllAssement);
+router.get("/assement", getAllAssement);
+router.post("/books/:id/assement/addComent", authMiddleware, addComment);
 
 export default router;
