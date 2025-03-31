@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getAllAuthor} from "../controllers/authorController";
+import { getAllAuthor } from "../controllers/authorController";
 
 const router = Router();
 
-router.get("/", getAllAuthor);
+router.get("/author", getAllAuthor);
 
 export default router;
