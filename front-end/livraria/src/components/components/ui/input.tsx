@@ -1,21 +1,23 @@
-import * as React from "react"
+import React from "react";
 
-import { cn } from "../../lib/utils"
-
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
-  return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "border-input file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      )}
-      {...props}
-    />
-  )
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string; // Opcional, caso você queira usar labels
+  errorMessage?: string; // Para mensagens de erro
 }
 
-export { Input }
+const Input: React.FC<InputProps> = ({ label, errorMessage, ...props }) => {
+  return (
+    <div className="mb-4">
+      {label && <label className="block text-gray-700 text-sm font-bold mb-2">{label}</label>}
+      <input
+        {...props}
+        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+          props.className || ""
+        }`}
+      />
+      {errorMessage && <p className="text-red-500 text-xs italic">{errorMessage}</p>}
+    </div>
+  );
+};
+
+export default Input;
