@@ -5,8 +5,8 @@ const Header: React.FC = () => {
     <header className=" bg-white/10 backdrop-blur-lg shadow-lg border-b border-white rounded-b-[40px] gap-2.5 || flex justify-between items-center || py-4 px-6 ">
       <nav className="flex items-center justify-between || w-full">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2">
-          <img src={logoBook} alt="Logo" className="h-12 w-auto" />
+        <a href="/" className="flex items-center gap-2"> {/* Alterado href="#" para href="/" */}
+          <img src={logoBook} alt="Logo" className="h-18 w-auto" />
           <span className="hidden sm:block font-bold text-lg text-black">ECO LIVRARIA</span>
         </a>
 
@@ -16,7 +16,6 @@ const Header: React.FC = () => {
             { label: "Inicio", path: "/" },
             { label: "Sobre", path: "/sobre" },
             { label: "Contato", path: "/contato" },
-            { label: "Favoritos", path: "/favoritos" },
             { label: "Minha Estante", path: "/minha-estante" },
             { label: "Minha Conta", path: "/minha-conta" },
           ].map((item) => (
@@ -26,7 +25,6 @@ const Header: React.FC = () => {
           ))}
         </ul>
       </nav>
-
     </header>
   );
 };
