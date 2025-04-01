@@ -19,7 +19,7 @@ function Home() {
           style={{ backgroundImage: `url(${fundoCardSobre})` }}
         >
           <CardContent className="p-8 text-center md:text-left rounded-lg">
-            <h2 className="text-2xl text-green-400 mb-4 font-light">Sobre a Nossa Livraria</h2>
+            <h2 className="text-2xl text-black mb-4 font-light">Sobre a Nossa Livraria</h2>
             <p className="text-black mb-4 font-light">
             📖 Bem-vindo à Nossa Livraria!
             </p>
@@ -42,7 +42,7 @@ function Home() {
           style={{ backgroundImage: `url(${fundoCardSobre})` }}
         >
           <CardContent className="p-8 text-center md:text-left rounded-lg">
-            <h3 className="text-lg text-green-400 mb-2 font-light"> 📚 Navegue pelo site e descubra mais:</h3>
+            <h3 className="text-lg text-black mb-2 font-light"> 📚 Navegue pelo site e descubra mais:</h3>
             <ul className="list-disc list-inside text-black mb-4 font-light">
               <li> Minha Estante – Explore todos os livros disponíveis.</li>
               <li> Sobre Nós – Saiba mais sobre nossa livraria.</li>

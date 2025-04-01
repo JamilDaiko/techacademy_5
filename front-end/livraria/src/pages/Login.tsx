@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/components/ui/tabs";
 import Input from "../components/components/ui/input"; // Certifique-se de que esse caminho está correto
 import { validateEmail } from "../utils/validations";
+import {maskJs} from 'mask-js';
 
 const Login = () => {
   const [tab, setTab] = useState("login"); // Alterna entre login e cadastro
@@ -20,18 +21,7 @@ const Login = () => {
       const cleanedValue = value.replace(/\D/g, "");
       
       // Aplica a formatação do CPF (XXX.XXX.XXX-XX)
-      const formattedValue = cleanedValue
-        .replace(/(\d{3})(\d{3})?(\d{3})?(\d{2})?/, (_, part1, part2, part3, part4) => {
-          if (part4) {
-            return `${part1}.${part2}.${part3}-${part4}`;
-          } else if (part3) {
-            return `${part1}.${part2}.${part3}`;
-          } else if (part2) {
-            return `${part1}.${part2}`;
-          } else {
-            return part1;
-          }
-        });
+      const formattedValue = maskJs('999.999.999-99', cleanedValue);
         
       setForm({ ...form, [id]: formattedValue });
     } else {
