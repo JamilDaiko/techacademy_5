@@ -6,8 +6,11 @@ import categoryRoutes from "./routes/categoriesRoute";
 import assessmentRoutes from "./routes/assessmentRoutes";
 import authorRoutes from "./routes/authorRoutes";
 import loginRoutes from "./routes/loginRoutes";
+import cors from "cors";
 
 const app = express();
+app.use(cors()); // Permitir requisições do front-end
+app.use(express.json()); // Permitir JSON no body das requisições
 const port = 3000;
 
 app.use(express.json());
