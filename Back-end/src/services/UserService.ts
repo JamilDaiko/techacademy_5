@@ -1,4 +1,5 @@
 import UserModel from "../models/UserModel";
+import { cpf as cpfValidator } from "cpf-cnpj-validator";
 
 const validateFields = (
   name: string,
@@ -30,12 +31,16 @@ const validatePassword = (password: string) => {
   }
 };
 
-const validateCPF = (cpf: string) => {
-  const cpfRegex = /^\d{11}$/;
+export const validateCPF = (cpf: string): boolean => {
+  console.log("Validando CPF:", cpf); // Depuração
+  const isValid = cpfValidator.isValid(cpf);
+  console.log("Resultado da validação:", isValid);
 
-  if (!cpfRegex.test(cpf)) {
-    throw new Error("CPF inválido. Deve conter 11 dígitos numéricos.");
+  if (!isValid) {
+    throw new Error("CPF inválido.");
   }
+
+  return true;
 };
 
 const checkIfEmailExists = async (email: string) => {
