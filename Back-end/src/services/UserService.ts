@@ -11,6 +11,14 @@ const validateFields = (
   }
 };
 
+export const validateEmail = (email: string) => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
+
+  if (!emailRegex.test(email)) {
+    throw new Error("E-mail inválido");
+  }
+};
+
 const validatePassword = (password: string) => {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -44,6 +52,7 @@ export const createUser = async (
   cpf: string
 ) => {
   validateFields(name, email, password, cpf);
+  validateEmail(email); // Adicionada validação de e-mail
   validatePassword(password);
   validateCPF(cpf);
   await checkIfEmailExists(email);

@@ -3,6 +3,9 @@ import { DataTypes, Model } from "sequelize";
 import bcrypt from "bcrypt";
 
 class UserModel extends Model {
+  static deleteMany(arg0: {}) {
+    throw new Error("Method not implemented.");
+  }
   id: number | undefined;
   name: string | undefined;
   email: string | undefined;
@@ -12,7 +15,7 @@ class UserModel extends Model {
   public async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password!);
   }
-  
+
   public async hashPassword() {
     this.password = await bcrypt.hash(this.password!, 10);
   }
