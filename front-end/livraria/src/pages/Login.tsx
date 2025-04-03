@@ -79,7 +79,7 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-3xl shadow-2xl bg-white">
+    <div className=" mx-auto mt-10 p-6 border rounded-3xl shadow-2xl bg-white w-lg">
       <Tabs defaultValue="login" onValueChange={setTab}>
         <TabsList className="grid grid-cols-2 mb-4">
           <TabsTrigger value="login">Entrar</TabsTrigger>

@@ -3,6 +3,11 @@ import { Card, CardContent } from "../components/components/ui/card"; // Importa
 import fundoCardSobre from "../assets/fundo-cardsobre.jpg"; // Importar a imagem
 import logoBook from "../assets/logo-book.svg"; // Importar a imagem do logo
 
+// Importar as imagens dos livros
+import alemVeu from "../assets/alem-veu.webp";
+import sombras from "../assets/sombras-passado.webp";
+import ultimoGuardiao from "../assets/ultimo-guardiao.webp";
+
 function Home() {
   return (
     <>
@@ -31,9 +36,27 @@ function Home() {
 
         {/* Três Cards */}
         <div className="flex justify-between flex-wrap w-full">
-          <CustomCard />
-          <CustomCard />
-          <CustomCard />
+          <CustomCard
+            image={sombras}
+            title="📖 Sombras do Passado"
+            author="Eduardo Vasquez"
+            genre="Suspense / Terror"
+            description="Ao herdar uma antiga mansão esquecida no interior, Miguel decide explorá-la em busca de suas origens familiares. No entanto, ao entrar na casa, ele começa a perceber que não está sozinho. Vozes sussurram pelos corredores, sombras se movem onde não deveriam, e segredos há muito enterrados começam a emergir. Em meio ao medo e à dúvida, Miguel precisa desvendar a verdade sobre sua família antes que seja tarde demais – ou se tornar mais um entre os espíritos que assombram a propriedade."
+          />
+          <CustomCard
+            image={ultimoGuardiao}
+            title="⚔️ O Último Guardião"
+            author="Helena D’Almeida"
+            genre="Fantasia Épica"
+            description="No reino de Eldoria, a profecia anuncia que quando o portal ancestral se abrir, as forças do caos retornarão. Ethan, um jovem guerreiro criado como um simples ferreiro, descobre ser o último descendente dos Guardiões, a única linhagem capaz de selar o portal. Com a ajuda de aliados improváveis – uma maga exilada e um ladrão de bom coração –, ele deve enfrentar criaturas sombrias, superar traições e, acima de tudo, dominar o poder que corre em suas veias antes que a destruição engula o mundo."
+          />
+          <CustomCard
+            image={alemVeu}
+            title="🪞 Além do Véu"
+            author="Ricardo Monteiro"
+            genre="Suspense / Fantasia Sombria"
+            description="Lara sempre teve pesadelos estranhos, mas quando encontra um antigo espelho no porão de sua nova casa, suas visões tomam forma real. A cada noite, o reflexo parece se mexer de maneira independente, e uma figura encapuzada a observa do outro lado. Aos poucos, Lara descobre que o espelho é um portal para uma dimensão esquecida, onde almas aprisionadas clamam por libertação. Mas para libertá-las, ela precisará fazer um sacrifício – e talvez nunca mais possa retornar."
+          />
         </div>
 
         {/* Card Sobre a Livraria (Abaixo dos 3 cards) */}

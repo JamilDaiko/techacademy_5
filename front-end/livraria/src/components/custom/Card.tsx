@@ -1,7 +1,14 @@
 import { useState } from "react";
-import esteticaCard from "../../assets/estetica-card.jpg";
 
-export function CustomCard() {
+interface CustomCardProps {
+  image: string; // Propriedade para a imagem
+  title: string; // Título do livro
+  author: string; // Autor do livro
+  genre: string; // Gênero do livro
+  description: string; // Descrição do livro
+}
+
+export function CustomCard({ image, title, author, genre, description }: CustomCardProps) {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
   const handleViewClick = () => {
@@ -11,9 +18,8 @@ export function CustomCard() {
   return (
     <div
       className="w-[33%] h-[300px] bg-cover bg-center rounded-lg shadow-lg px-4 py-8 relative"
-      style={{ backgroundImage: `url(${esteticaCard})` }}
+      style={{ backgroundImage: `url(${image})` }} // Usa a imagem passada como propriedade
     >
-      <img src="" alt="" />
       <div className="flex justify-between gap-5 items-center mt-4">
         <button
           className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
@@ -34,16 +40,10 @@ export function CustomCard() {
       </div>
       {isAccordionOpen && (
         <div className="mt-4 bg-white/30 backdrop-blur-2xl shadow-lg border-b border-white p-4 rounded">
-          <h2 className="text-lg font-bold">Mais Informações</h2>
-          <p>
-            "Este livro oferece uma introdução prática e acessível à programação,
-            cobrindo desde os conceitos fundamentais até técnicas avançadas. Com
-            exemplos claros e exercícios interativos, é ideal tanto para
-            iniciantes quanto para aqueles que desejam aprimorar suas
-            habilidades. Aprenda a resolver problemas complexos, entender
-            algoritmos e estruturas de dados, e a construir aplicações reais
-            usando uma das linguagens mais populares do mercado."
-          </p>
+          <h2 className="text-lg font-bold">{title}</h2>
+          <p className="text-sm font-semibold">Autor: {author}</p>
+          <p className="text-sm font-semibold">Gênero: {genre}</p>
+          <p className="text-sm mt-2">{description}</p>
           <button
             className="mt-4 bg-gray-400 text-white px-4 py-2 rounded"
             onClick={handleViewClick}

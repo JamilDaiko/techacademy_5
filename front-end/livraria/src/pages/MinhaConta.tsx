@@ -46,7 +46,7 @@ const MinhaConta = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6">
+    <div className="mx-auto mt-10 p-6 border rounded-3xl shadow-2xl bg-white w-lg">
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle>Minha Conta</CardTitle>

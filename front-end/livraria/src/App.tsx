@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import MinhaConta from "./pages/MinhaConta";
 import Home from "./pages/Home";
 import Footer from "./components/components/Footer";
+import Sobre from "./pages/Sobre";
+import Contato from "./pages/Contato"; // Importar o componente Contato
 
 const App: React.FC = () => {
   return (
@@ -12,11 +14,11 @@ const App: React.FC = () => {
       <div className="flex flex-col min-h-screen">
         <Header />
         <Routes>
-          {/* A rota inicial agora renderiza o componente Home */}
           <Route path="/" element={<Home />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
-          {/* Nova rota para o formulário de login */}
           <Route path="/login" element={<Login />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/contato" element={<Contato />} /> {/* Nova rota para Contato */}
         </Routes>
         <Footer />
       </div>
