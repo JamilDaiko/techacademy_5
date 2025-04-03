@@ -40,8 +40,16 @@ export const updateUser = async (
 ) => {
   try {
     const { name, email, password } = req.body;
+    const userId = req.params.id;
+    const authenticatedUserId = req.body.user.id; // O ID do usuário autenticado
 
-    const user = await UserModel.findByPk(req.params.id);
+    if (userId !== authenticatedUserId) {
+      return res
+        .status(403)
+        .json({ error: "Você só pode editar seus próprios dados" });
+    }
+
+    const user = await UserModel.findByPk(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

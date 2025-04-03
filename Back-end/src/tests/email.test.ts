@@ -1,6 +1,6 @@
 import request from "supertest";
-import app from "../app"; // Certifique-se de apontar para o arquivo correto do seu servidor Express
-import { validateEmail } from "../services/UserService"; // Importa a função validateEmail
+import app from "../app";
+import { validateEmail } from "../services/UserService";
 
 describe("Email Validation API", () => {
   it("should return true for a valid email format", () => {

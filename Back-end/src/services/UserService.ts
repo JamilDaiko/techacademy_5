@@ -20,7 +20,7 @@ export const validateEmail = (email: string) => {
   }
 };
 
-const validatePassword = (password: string) => {
+export const validatePassword = (password: string) => {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])[A-Za-z\d!@#$%^&*]{8,}$/;
 
