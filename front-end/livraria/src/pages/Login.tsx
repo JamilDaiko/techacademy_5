@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/components/ui/tabs";
 import Input from "../components/components/ui/input";
 import { validateEmail } from "../utils/validations";
 import { maskJs } from "mask-js";
 import api from "../services/api";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthContext"; // Importando contexto de autenticação
 
 const Login = () => {
   const [tab, setTab] = useState("login");
@@ -18,8 +20,10 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth(); // Pegando a função de login do contexto
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     if (id === "cpf") {
       const cleanedValue = value.replace(/\D/g, "");
@@ -30,24 +34,16 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
     if (tab === "signup") {
-      if (!form.fullName.trim()) {
-        setError("O nome completo é obrigatório!");
-        return;
-      }
-      if (!validateEmail(form.email)) {
-        setError("E-mail inválido!");
-        return;
-      }
-      if (form.password !== form.confirmPassword) {
-        setError("As senhas não coincidem!");
-        return;
-      }
+      // Validações antes do cadastro
+      if (!form.fullName.trim()) return setError("O nome completo é obrigatório!");
+      if (!validateEmail(form.email)) return setError("E-mail inválido!");
+      if (form.password !== form.confirmPassword) return setError("As senhas não coincidem!");
 
       try {
         const response = await api.post("/users", {
@@ -62,16 +58,18 @@ const Login = () => {
         setError(axios.isAxiosError(err) ? err.response?.data?.error || "Erro ao criar conta." : "Erro desconhecido.");
       }
     } else {
-      if (!form.email || !form.password) {
-        setError("E-mail e senha são obrigatórios!");
-        return;
-      }
+      // Login
+      if (!form.email || !form.password) return setError("E-mail e senha são obrigatórios!");
+
       try {
-        await api.post("/login", {
+        const response = await api.post("/login", {
           email: form.email,
           password: form.password,
         });
-        alert("Login bem-sucedido!");
+        const token = response.data.token;
+        login(token); // Salva o token no contexto de autenticação
+        console.log("Login bem-sucedido, redirecionando para a página inicial...");
+        navigate("/home"); // Redireciona para a rota inicial
       } catch (err) {
         setError(axios.isAxiosError(err) ? err.response?.data?.error || "Erro ao fazer login." : "Erro desconhecido.");
       }
@@ -79,7 +77,7 @@ const Login = () => {
   };
 
   return (
-    <div className=" mx-auto mt-10 p-6 border rounded-3xl shadow-2xl bg-white w-lg">
+    <div className="mx-auto mt-10 p-6 border rounded-3xl shadow-2xl bg-white w-lg">
       <Tabs defaultValue="login" onValueChange={setTab}>
         <TabsList className="grid grid-cols-2 mb-4">
           <TabsTrigger value="login">Entrar</TabsTrigger>
@@ -95,7 +93,9 @@ const Login = () => {
               <Input label="Nome Completo" type="text" id="fullName" value={form.fullName} onChange={handleChange} required />
             )}
             <Input label="E-mail" type="email" id="email" value={form.email} onChange={handleChange} required />
-            <Input label="CPF" type="text" id="cpf" value={form.cpf} onChange={handleChange} required />
+            {tab === "signup" && (
+              <Input label="CPF" type="text" id="cpf" value={form.cpf} onChange={handleChange} required />
+            )}
             <div className="relative">
               <Input
                 label="Senha"

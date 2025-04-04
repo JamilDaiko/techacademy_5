@@ -1,29 +1,40 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Header from "./components/custom/Header";
-import Login from "./pages/Login";
-import MinhaConta from "./pages/MinhaConta";
-import Home from "./pages/Home";
 import Footer from "./components/components/Footer";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import MinhaConta from "./pages/MinhaConta";
 import Sobre from "./pages/Sobre";
-import Contato from "./pages/Contato"; // Importar o componente Contato
+import Contato from "./pages/Contato";
+import PrivateRoute from "./components/components/ui/PrivateRoute";
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Rota pública - Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Rotas protegidas pelo PrivateRoute */}
+        <Route
+          element={
+            <PrivateRoute>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <Outlet />
+                <Footer />
+              </div>
+            </PrivateRoute>
+          }
+        >
+          <Route path="/home" element={<Home />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/sobre" element={<Sobre />} />
-          <Route path="/contato" element={<Contato />} /> {/* Nova rota para Contato */}
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+          <Route path="/contato" element={<Contato />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;

@@ -1,12 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom"; // Importar o Link do react-router-dom
+import { Link, useNavigate } from "react-router-dom";
 import logoBook from "../../assets/logo-book.svg";
+import { useAuth } from "../../contexts/AuthContext"; 
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout } = useAuth(); // Função de logout do contexto
+  const navigate = useNavigate(); // Hook para redirecionar
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    logout(); // Remove o token e limpa o estado de autenticação
+    console.log("Usuário deslogado");
+    navigate("/login"); // Redireciona para a página de login
   };
 
   return (
@@ -94,6 +103,12 @@ const Header: React.FC = () => {
           </ul>
         )}
       </nav>
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      >
+        Logout
+      </button>
     </header>
   );
 };

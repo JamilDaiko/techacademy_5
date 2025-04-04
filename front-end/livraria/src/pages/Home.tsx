@@ -12,7 +12,7 @@ function Home() {
   return (
     <>
       <main className="max-w-[1220px] px-2.5 m-auto py-5 grid-cols-2 gap-5">
-        {/* Substituir "my library" pelo conteúdo do header */}
+       
         <div className="flex items-center justify-center gap-4 pb-1">
           <img src={logoBook} alt="Logo" className="h-35 w-auto" /> {/* Alterado de h-12 para h-16 */}
           <h1 className="text-3xl font-bold text-center text-black">ECO LIVRARIA</h1>
