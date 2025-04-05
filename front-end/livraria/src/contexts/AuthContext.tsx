@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
   token: string | null;
@@ -10,9 +10,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("authToken")
-  );
+  const [token, setToken] = useState<string | null>(null);
+
+  // Pega o token salvo no localStorage quando o app inicia
+  useEffect(() => {
+    const savedToken = localStorage.getItem("authToken");
+    if (savedToken) setToken(savedToken);
+  }, []);
 
   const login = (newToken: string) => {
     localStorage.setItem("authToken", newToken);
@@ -21,6 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("userId"); // limpa o userId também, se você salvar ele
     setToken(null);
   };
 

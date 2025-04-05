@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext"; // ajuste o path se necessário
 import { Card, CardContent, CardHeader, CardTitle } from "../components/components/ui/card";
 import Input from "../components/components/ui/input";
 import { Button } from "../components/components/ui/button";
-import api from "../services/api"; // axios com baseURL configurada
+import api from "../services/api";
 import axios from "axios";
 
 const MinhaConta = () => {
@@ -14,6 +16,9 @@ const MinhaConta = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+  const { logout } = useAuth(); // se estiver usando contexto de autenticação
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -54,7 +59,7 @@ const MinhaConta = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // envio do token aqui
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -91,14 +96,20 @@ const MinhaConta = () => {
 
         const response = await api.delete(`/users/${userId}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // envio do token aqui também
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.status === 200) {
           setSuccess("Conta deletada com sucesso!");
-          console.log("Conta deletada");
-          // Aqui você pode redirecionar ou limpar os dados do usuário
+          localStorage.removeItem("token");
+          localStorage.removeItem("userId");
+
+          if (logout) logout(); // chama logout se estiver usando AuthContext
+
+          setTimeout(() => {
+            navigate("/login");
+          }, 1500);
         } else {
           setError("Erro ao deletar a conta. Tente novamente.");
         }
