@@ -49,9 +49,12 @@ export const updateUser = async (
   try {
     const { name, email, password } = req.body;
     const userId = req.params.id;
-    const authenticatedUserId = req.body.user.id; // O ID do usuário autenticado
+    const authenticatedUserId = req.body.user?.user?.id; // <- Aqui está o pulo do gato
 
-    if (userId !== authenticatedUserId) {
+    console.log("userId param:", userId);
+    console.log("authenticatedUserId middleware:", authenticatedUserId);
+
+    if (String(userId) !== String(authenticatedUserId)) {
       return res
         .status(403)
         .json({ error: "Você só pode editar seus próprios dados" });
@@ -62,15 +65,9 @@ export const updateUser = async (
       return res.status(404).json({ error: "User not found" });
     }
 
-    if (name && name !== "") {
-      user.name = name;
-    }
-    if (email && email !== "") {
-      user.email = email;
-    }
-    if (password && password !== "") {
-      user.password = password;
-    }
+    if (name && name !== "") user.name = name;
+    if (email && email !== "") user.email = email;
+    if (password && password !== "") user.password = password;
 
     await user.save();
     res.status(200).json(user);
