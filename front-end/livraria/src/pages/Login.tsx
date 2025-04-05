@@ -67,7 +67,12 @@ const Login = () => {
           password: form.password,
         });
         const token = response.data.token;
-        login(token); // Salva o token no contexto de autenticação
+        const userId = response.data.userId; // <- Pega o userId retornado pela API
+
+        login(token); // Salva o token no contexto
+        localStorage.setItem("token", token); // <- Armazena o token no localStorage
+        localStorage.setItem("userId", userId); // <- Salva o userId no localStorage
+
         console.log("Login bem-sucedido, redirecionando para a página inicial...");
         navigate("/home"); // Redireciona para a rota inicial
       } catch (err) {
