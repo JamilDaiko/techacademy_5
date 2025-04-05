@@ -13,9 +13,17 @@ export const getUserById = async (
   req: Request<{ id: string }>,
   res: Response
 ) => {
-  const user = await UserModel.findByPk(req.params.id);
+  try {
+    const user = await UserModel.findByPk(req.params.id);
 
-  return res.json(user);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no servidor " + error });
+  }
 };
 
 // método que cria um novo usuário

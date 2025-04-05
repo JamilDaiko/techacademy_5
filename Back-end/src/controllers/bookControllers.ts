@@ -12,7 +12,22 @@ export const getBookById = async (
   req: Request<{ id: string }>,
   res: Response
 ) => {
-  const book = await BookModel.findByPk(req.params.id);
+  const book = await BookModel.findByPk(req.params.id, {
+    include: [
+      {
+        association: "assessments",
+        include: [
+          {
+            association: "user",
+            attributes: ["id", "name"], // Inclui apenas os campos id e name do usuário
+          },
+        ],
+      },
+    ],
+  });
+  if (!book) {
+    return res.status(404).json({ error: "Livro não encontrado" });
+  }
 
   return res.json(book);
 };

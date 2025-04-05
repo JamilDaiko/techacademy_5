@@ -1,11 +1,13 @@
 import sequelize from "../config/database";
 import { DataTypes, Model } from "sequelize";
+import AssessmentModel from "./AssessmentModel";
 
 class Book extends Model {
   id: number | undefined;
   title: string | undefined;
   description: string | undefined;
   date_published: Date | undefined;
+  public assessments?: AssessmentModel[];
 }
 
 Book.init(
