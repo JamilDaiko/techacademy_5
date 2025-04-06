@@ -27,7 +27,7 @@ function App() {
             </PrivateRoute>
           }
         >
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />

@@ -74,7 +74,7 @@ const Login = () => {
         localStorage.setItem("userId", userId); // <- Salva o userId no localStorage
 
         console.log("Login bem-sucedido, redirecionando para a página inicial...");
-        navigate("/home"); // Redireciona para a rota inicial
+        navigate("/"); // Redireciona para a rota inicial
       } catch (err) {
         setError(axios.isAxiosError(err) ? err.response?.data?.error || "Erro ao fazer login." : "Erro desconhecido.");
       }
