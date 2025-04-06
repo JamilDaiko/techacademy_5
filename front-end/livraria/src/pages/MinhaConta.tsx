@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext"; // ajuste o path se necessário
+import { useAuth } from "../contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/components/ui/card";
 import Input from "../components/components/ui/input";
 import { Button } from "../components/components/ui/button";
@@ -18,7 +18,7 @@ const MinhaConta = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
-  const { logout } = useAuth(); // se estiver usando contexto de autenticação
+  const { logout, token } = useAuth(); // pega o token do contexto
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -44,7 +44,6 @@ const MinhaConta = () => {
     if (validateForm()) {
       try {
         const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
 
         if (!userId || !token) {
           setError("Usuário não autenticado. Faça login novamente.");
@@ -87,32 +86,24 @@ const MinhaConta = () => {
     if (confirmDelete) {
       try {
         const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
 
         if (!userId || !token) {
           setError("Usuário não autenticado.");
           return;
         }
 
-        const response = await api.delete(`/users/${userId}`, {
+        await api.delete(`/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (response.status === 200) {
-          setSuccess("Conta deletada com sucesso!");
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
+        setSuccess("Conta deletada com sucesso!");
+        logout(); // remove token e limpa tudo
 
-          if (logout) logout(); // chama logout se estiver usando AuthContext
-
-          setTimeout(() => {
-            navigate("/login");
-          }, 1500);
-        } else {
-          setError("Erro ao deletar a conta. Tente novamente.");
-        }
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
       } catch (error) {
         console.error("Erro ao deletar a conta:", error);
         setError("Erro ao deletar a conta. Tente novamente.");
