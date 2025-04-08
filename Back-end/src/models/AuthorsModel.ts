@@ -5,7 +5,6 @@ import BookModel from "./BookModel";
 class Authors extends Model {
   id: number | undefined;
   name: string | undefined;
-  biography: string | undefined;
 }
 
 Authors.init(
@@ -17,10 +16,6 @@ Authors.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    biography: {
-      type: DataTypes.TEXT,
       allowNull: false,
     },
   },
