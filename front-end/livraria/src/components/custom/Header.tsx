@@ -25,7 +25,7 @@ const Header: React.FC = () => {
     { label: "Início", path: "/" },
     { label: "Livros", path: "/livros" },
     { label: "Autores", path: "/autores" },
-    { label: "Gêneros", path: "/generos" },
+    { label: "Categoria", path: "/categoria" }, // <- Alterado aqui
     { label: "Sobre", path: "/sobre" },
     { label: "Contato", path: "/contato" },
     { label: "Minha Conta", path: "/minha-conta" },

@@ -47,7 +47,7 @@ function Sobre() {
             Desenvolvemos a Eco Livraria pensando em você:
           </p>
           <ul className="list-disc list-inside text-black mb-4 font-light">
-            <li>🔹 Cadastre autores, gêneros e livros de forma prática.</li>
+            <li>🔹 Cadastre autores, categoria e livros de forma prática.</li>
             <li>🔹 Gerencie seu histórico de leitura com facilidade.</li>
             <li>🔹 Deixe comentários, leia opiniões e descubra novas obras.</li>
           </ul>
