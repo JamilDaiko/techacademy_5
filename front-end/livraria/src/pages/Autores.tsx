@@ -10,7 +10,7 @@ type Autor = {
   nome: string;
 };
 
-const API_URL = "http://localhost:3000/autores"; // Atualize para a URL da sua API de autores
+const API_URL = "http://localhost:3000/Authors"; // Atualize para a URL da sua API de autores
 
 const Autores = () => {
   const [autores, setAutores] = useState<Autor[]>([]);
