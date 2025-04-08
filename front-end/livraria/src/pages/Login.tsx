@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/components/ui/tabs";
-import Input from "../components/components/ui/input";
+import { Input } from "../components/components/ui/input";
 import { validateEmail } from "../utils/validations";
 import { maskJs } from "mask-js";
 import api from "../services/api";

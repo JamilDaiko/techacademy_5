@@ -5,7 +5,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string; // Para mensagens de erro
 }
 
-const Input: React.FC<InputProps> = ({ label, errorMessage, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, errorMessage, ...props }) => {
   return (
     <div className="mb-4">
       {label && <label className="block text-gray-700 text-sm font-bold mb-2">{label}</label>}
@@ -19,5 +19,3 @@ const Input: React.FC<InputProps> = ({ label, errorMessage, ...props }) => {
     </div>
   );
 };
-
-export default Input;

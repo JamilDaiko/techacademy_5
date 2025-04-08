@@ -18,9 +18,18 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    // Garante que o logout finalize antes do redirecionamento
     setTimeout(() => navigate("/login", { replace: true }), 0);
   };
+
+  const menuItems = [
+    { label: "Início", path: "/" },
+    { label: "Livros", path: "/livros" },
+    { label: "Autores", path: "/autores" },
+    { label: "Gêneros", path: "/generos" },
+    { label: "Sobre", path: "/sobre" },
+    { label: "Contato", path: "/contato" },
+    { label: "Minha Conta", path: "/minha-conta" },
+  ];
 
   return (
     <header className="bg-white/10 backdrop-blur-lg shadow-lg border-b border-white rounded-b-[40px] gap-2.5 flex justify-between items-center py-4 px-6">
@@ -49,10 +58,11 @@ const Header: React.FC = () => {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8 text-lg font-light text-black items-center">
-          <li><Link to="/">Início</Link></li>
-          <li><Link to="/sobre">Sobre</Link></li>
-          <li><Link to="/contato">Contato</Link></li>
-          <li><Link to="/minha-estante">Minha Estante</Link></li>
+          {menuItems.map((item) => (
+            <li key={item.label}>
+              <Link to={item.path}>{item.label}</Link>
+            </li>
+          ))}
           {userName && (
             <li className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl text-sm font-medium text-gray-800 shadow-sm animate-[fade-in_0.4s_ease-out_forwards]">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
@@ -61,19 +71,12 @@ const Header: React.FC = () => {
               <span>Olá, <span className="font-semibold">{userName}</span></span>
             </li>
           )}
-          <li><Link to="/minha-conta">Minha Conta</Link></li>
         </ul>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <ul className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-b-lg flex flex-col space-y-4 text-lg font-light text-black p-4 md:hidden">
-            {[
-              { label: "Início", path: "/" },
-              { label: "Sobre", path: "/sobre" },
-              { label: "Contato", path: "/contato" },
-              { label: "Minha Estante", path: "/minha-estante" },
-              { label: "Minha Conta", path: "/minha-conta" },
-            ].map((item) => (
+          <ul className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-b-lg flex flex-col space-y-4 text-lg font-light text-black p-4 md:hidden z-50">
+            {menuItems.map((item) => (
               <li key={item.label} className="transition hover:text-gray-800 cursor-pointer">
                 <Link to={item.path}>{item.label}</Link>
               </li>

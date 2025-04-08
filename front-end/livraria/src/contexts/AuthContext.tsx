@@ -1,24 +1,29 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import api from "../services/api"; // Certifique-se de que o serviço de API está configurado
+import api from "../services/api";
 
 interface AuthContextType {
   token: string | null;
   login: (token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
-  userName: string | null; // Adicionado para armazenar o nome do usuário
-  fetchUserName: () => Promise<void>; // Função para buscar o nome do usuário
+  userName: string | null;
+  fetchUserName: () => Promise<void>;
+  loading: boolean; // ✅ novo estado
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null); // Estado para o nome do usuário
+  const [userName, setUserName] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // ✅ inicia como carregando
 
   useEffect(() => {
     const savedToken = localStorage.getItem("authToken");
-    if (savedToken) setToken(savedToken);
+    if (savedToken) {
+      setToken(savedToken);
+    }
+    setLoading(false); // ✅ termina o carregamento
   }, []);
 
   const login = (newToken: string) => {
@@ -28,9 +33,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("userId"); // limpa o userId também, se você salvar ele
+    localStorage.removeItem("userId");
     setToken(null);
-    setUserName(null); // Limpa o nome do usuário ao deslogar
+    setUserName(null);
   };
 
   const fetchUserName = async () => {
@@ -38,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (userId) {
       try {
         const response = await api.get(`/users/${userId}`);
-        setUserName(response.data.name); // Atualiza o estado com o nome do usuário
+        setUserName(response.data.name);
       } catch (error) {
         console.error("Erro ao buscar o nome do usuário:", error);
       }
@@ -54,6 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: !!token,
         userName,
         fetchUserName,
+        loading, // ✅ exportando o loading
       }}
     >
       {children}

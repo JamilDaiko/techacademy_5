@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios"; // Importa o Axios
-import Input from "../components/components/ui/input";
+import { Input } from "../components/components/ui/input";
 import { validateEmail, validateCPF, validatePassword } from "../utils/validations";
 
 const Register = () => {
