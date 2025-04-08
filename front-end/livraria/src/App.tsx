@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Livros from "./pages/Livros";
 import Autores from "./pages/Autores";
-import Generos from "./pages/Generos";
+import Categoria from "./pages/Categoria"; // Alterado de Generos para Categoria
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import MinhaConta from "./pages/MinhaConta";
@@ -39,7 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/livros" element={<Livros />} />
           <Route path="/autores" element={<Autores />} />
-          <Route path="/generos" element={<Generos />} />
+          <Route path="/categoria" element={<Categoria />} /> {/* Alterado */}
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />
           <Route path="/minha-conta" element={<MinhaConta />} />

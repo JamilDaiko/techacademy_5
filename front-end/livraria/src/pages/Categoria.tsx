@@ -5,27 +5,27 @@ import { Dialog, DialogContent, DialogTrigger } from "../components/components/u
 import { Card, CardContent } from "../components/components/ui/card";
 import fundoCardSobre from "../assets/fundo-cardsobre.jpg";
 
-type Autor = {
+type Categoria = {
   id: number;
   nome: string;
 };
 
-const API_URL = "http://localhost:3000/autores"; // Atualize para a URL da sua API de autores
+const API_URL = "http://localhost:3000/categorias"; // Altere para a URL da sua API
 
-const Autores = () => {
-  const [autores, setAutores] = useState<Autor[]>([]);
-  const [form, setForm] = useState<Omit<Autor, "id">>({ nome: "" });
+const Categorias = () => {
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [form, setForm] = useState<Omit<Categoria, "id">>({ nome: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    fetchAutores();
+    fetchCategorias();
   }, []);
 
-  const fetchAutores = async () => {
+  const fetchCategorias = async () => {
     const response = await fetch(API_URL);
     const data = await response.json();
-    setAutores(data);
+    setCategorias(data);
   };
 
   const handleSubmit = async () => {
@@ -33,7 +33,7 @@ const Autores = () => {
       await fetch(`${API_URL}/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form }),
       });
     } else {
       await fetch(API_URL, {
@@ -46,18 +46,18 @@ const Autores = () => {
     setForm({ nome: "" });
     setEditingId(null);
     setOpen(false);
-    fetchAutores();
+    fetchCategorias();
   };
 
-  const handleEdit = (autor: Autor) => {
-    setForm({ nome: autor.nome });
-    setEditingId(autor.id);
+  const handleEdit = (categoria: Categoria) => {
+    setForm({ nome: categoria.nome });
+    setEditingId(categoria.id);
     setOpen(true);
   };
 
   const handleDelete = async (id: number) => {
     await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    fetchAutores();
+    fetchCategorias();
   };
 
   return (
@@ -67,27 +67,26 @@ const Autores = () => {
         style={{ backgroundImage: `url(${fundoCardSobre})` }}
       >
         <CardContent className="p-8 text-center md:text-left rounded-lg backdrop-blur-sm">
-          <h2 className="text-2xl text-black mb-4 font-light">✍️ Cadastro de Autores</h2>
+          <h2 className="text-2xl text-black mb-4 font-light">🏷️ Cadastro de Categorias</h2>
           <p className="text-black mb-4 font-light">
-            Nesta seção, você pode cadastrar os autores dos seus livros preferidos.
-            É importante ter o autor registrado para poder associá-lo aos livros na hora do cadastro.
+            Aqui você pode cadastrar as categorias literárias, como Romance, Ficção, Terror, Fantasia, entre outros.
           </p>
           <p className="text-black font-light">
-            Depois de adicionar os autores por aqui, vá até a aba <strong>Livros</strong> e selecione o autor correspondente ao cadastrar suas obras.
+            Depois de cadastrar as categorias, vá até a aba <strong>Livros</strong> e selecione a categoria junto com o autor para concluir o cadastro de cada livro.
           </p>
         </CardContent>
       </Card>
 
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">📚 Lista de Autores</h1>
+        <h1 className="text-2xl font-bold">📚 Categorias</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="default">Novo Autor</Button>
+            <Button variant="default">Nova Categoria</Button>
           </DialogTrigger>
           <DialogContent className="space-y-4">
-            <h2 className="text-lg font-semibold">{editingId ? "Editar Autor" : "Adicionar Autor"}</h2>
+            <h2 className="text-lg font-semibold">{editingId ? "Editar Categoria" : "Adicionar Categoria"}</h2>
             <Input
-              placeholder="Nome do Autor"
+              placeholder="Nome da Categoria"
               value={form.nome}
               onChange={(e) => setForm({ ...form, nome: e.target.value })}
             />
@@ -98,25 +97,25 @@ const Autores = () => {
         </Dialog>
       </div>
 
-      {autores.length === 0 ? (
-        <p className="text-gray-500">Nenhum autor cadastrado ainda.</p>
+      {categorias.length === 0 ? (
+        <p className="text-gray-500">Nenhuma categoria cadastrada ainda.</p>
       ) : (
         <div className="grid gap-4">
-          {autores.map((autor) => (
+          {categorias.map((categoria) => (
             <div
-              key={autor.id}
+              key={categoria.id}
               className="border p-4 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white"
             >
               <div className="flex-1">
-                <h3 className="text-xl font-semibold">{autor.nome}</h3>
+                <h3 className="text-xl font-semibold">{categoria.nome}</h3>
                 <p className="text-lg text-gray-600 mt-2 italic">
-                  ✅ Autor cadastrado com sucesso! Agora vá até a aba <strong>Categoria</strong> e cadastre um gênero.
-                  Depois vá em <strong>Livros</strong> para vincular o autor e categoria, e deixar um comentário!
+                  ✅ Categoria cadastrada com sucesso! Agora vá até a aba <strong>Livros</strong> e utilize o menu
+                  para escolher o autor e essa categoria que você cadastrou. Você também pode deixar um comentário sobre o livro!
                 </p>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => handleEdit(autor)}>Editar</Button>
-                <Button variant="destructive" onClick={() => handleDelete(autor.id)}>Excluir</Button>
+                <Button variant="outline" onClick={() => handleEdit(categoria)}>Editar</Button>
+                <Button variant="destructive" onClick={() => handleDelete(categoria.id)}>Excluir</Button>
               </div>
             </div>
           ))}
@@ -126,4 +125,4 @@ const Autores = () => {
   );
 };
 
-export default Autores;
+export default Categorias;
