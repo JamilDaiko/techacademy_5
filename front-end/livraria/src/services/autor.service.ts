@@ -1,6 +1,6 @@
 // src/services/autor.service.ts
 
-const API_URL = "http://localhost:3000/autores";
+const API_URL = "http://localhost:3000/Authors";
 
 export const AutorService = {
   listar: async () => {

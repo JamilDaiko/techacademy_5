@@ -7,14 +7,14 @@ import fundoCardSobre from "../assets/fundo-cardsobre.jpg";
 
 type Categoria = {
   id: number;
-  nome: string;
+  name: string;
 };
 
-const API_URL = "http://localhost:3000/categorias"; // Altere para a URL da sua API
+const API_URL = "http://localhost:3000/categories"; // Altere para a URL da sua API
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [form, setForm] = useState<Omit<Categoria, "id">>({ nome: "" });
+  const [form, setForm] = useState<Omit<Categoria, "id">>({ name: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -43,14 +43,14 @@ const Categorias = () => {
       });
     }
 
-    setForm({ nome: "" });
+    setForm({ name: "" });
     setEditingId(null);
     setOpen(false);
     fetchCategorias();
   };
 
   const handleEdit = (categoria: Categoria) => {
-    setForm({ nome: categoria.nome });
+    setForm({ name: categoria.name });
     setEditingId(categoria.id);
     setOpen(true);
   };
@@ -87,8 +87,8 @@ const Categorias = () => {
             <h2 className="text-lg font-semibold">{editingId ? "Editar Categoria" : "Adicionar Categoria"}</h2>
             <Input
               placeholder="Nome da Categoria"
-              value={form.nome}
-              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
             <Button onClick={handleSubmit} className="w-full">
               {editingId ? "Atualizar" : "Cadastrar"}
@@ -107,7 +107,7 @@ const Categorias = () => {
               className="border p-4 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white"
             >
               <div className="flex-1">
-                <h3 className="text-xl font-semibold">{categoria.nome}</h3>
+                <h3 className="text-xl font-semibold">{categoria.name}</h3>
                 <p className="text-lg text-gray-600 mt-2 italic">
                   ✅ Categoria cadastrada com sucesso! Agora vá até a aba <strong>Livros</strong> e utilize o menu
                   para escolher o autor e essa categoria que você cadastrou. Você também pode deixar um comentário sobre o livro!
