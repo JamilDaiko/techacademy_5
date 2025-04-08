@@ -6,11 +6,12 @@ export const getAllAuthor = async (req: Request, res: Response) => {
   const Author = await AuthorsModel.findAll();
   res.send(Author);
 };
+
 // método que cria um novo autor
 export const createAuthor = async (req: Request, res: Response) => {
-  const { name, bio } = req.body;
+  const { name } = req.body;
   try {
-    const newAuthor = await AuthorsModel.create({ name, bio });
+    const newAuthor = await AuthorsModel.create({ name });
     res.status(201).send(newAuthor);
   } catch (error) {
     res.status(500).send({ error: "Failed to create author" });
@@ -20,10 +21,10 @@ export const createAuthor = async (req: Request, res: Response) => {
 // método que atualiza um autor existente
 export const updateAuthor = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, bio } = req.body;
+  const { name } = req.body;
   try {
     const updatedAuthor = await AuthorsModel.update(
-      { name, bio },
+      { name },
       { where: { id } }
     );
     if (updatedAuthor[0] === 0) {
