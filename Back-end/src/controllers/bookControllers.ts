@@ -1,10 +1,45 @@
 import BookModel from "../models/BookModel";
 import { Request, Response } from "express";
 
-// método que busca todos
+// método que busca todos com paginação
 export const getAllBooks = async (req: Request, res: Response) => {
-  const books = await BookModel.findAll();
-  res.send(books);
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    // Converte os parâmetros para números
+    const pageNumber = parseInt(page as string, 10);
+    const limitNumber = parseInt(limit as string, 10);
+
+    if (
+      isNaN(pageNumber) ||
+      isNaN(limitNumber) ||
+      pageNumber <= 0 ||
+      limitNumber <= 0
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Parâmetros de paginação inválidos." });
+    }
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    // Busca os livros com paginação
+    const { rows: books, count: total } = await BookModel.findAndCountAll({
+      limit: limitNumber,
+      offset,
+    });
+
+    res.json({
+      total,
+      page: pageNumber,
+      limit: limitNumber,
+      totalPages: Math.ceil(total / limitNumber),
+      data: books,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar livros:", error);
+    res.status(500).json({ error: "Erro interno ao buscar livros." });
+  }
 };
 
 // método que busca por id

@@ -7,8 +7,8 @@ import {
 
 const router = express.Router();
 
-router.get("/books", getAllBooks);
-router.get("/books/:id", getBookById);
-router.post("/books/addBook", addBook);
+router.get("/books", getAllBooks); // com paginação
+router.get("/books/:id", getBookById); // busca por ID
+router.post("/books/addBook", addBook); // novo livro
 
 export default router;
