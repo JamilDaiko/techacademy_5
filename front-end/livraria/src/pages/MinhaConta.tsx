@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/components/ui/card";
-import Input from "../components/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/components/ui/card";
+import { Input } from "../components/components/ui/input";
 import { Button } from "../components/components/ui/button";
 import api from "../services/api";
 import axios from "axios";
@@ -11,14 +16,18 @@ const MinhaConta = () => {
   const [form, setForm] = useState({
     name: "Novo Nome",
     password: "",
+    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
 
   const navigate = useNavigate();
-  const { logout, token } = useAuth(); // pega o token do contexto
+  const { logout, token } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -30,8 +39,12 @@ const MinhaConta = () => {
       setError("O nome completo é obrigatório!");
       return false;
     }
-    if (form.password && form.password.length < 8) {
+    if (!form.password || form.password.length < 8) {
       setError("A senha deve ter pelo menos 8 caracteres!");
+      return false;
+    }
+    if (form.password !== form.confirmPassword) {
+      setError("As senhas não coincidem!");
       return false;
     }
     setError("");
@@ -82,32 +95,34 @@ const MinhaConta = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm("Tem certeza de que deseja deletar sua conta? Essa ação não pode ser desfeita.");
-    if (confirmDelete) {
-      try {
-        const userId = localStorage.getItem("userId");
+    if (deleteInput !== "DELETAR") {
+      setError("Para deletar a conta, digite 'DELETAR' corretamente.");
+      return;
+    }
 
-        if (!userId || !token) {
-          setError("Usuário não autenticado.");
-          return;
-        }
+    try {
+      const userId = localStorage.getItem("userId");
 
-        await api.delete(`/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setSuccess("Conta deletada com sucesso!");
-        logout(); // remove token e limpa tudo
-
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
-      } catch (error) {
-        console.error("Erro ao deletar a conta:", error);
-        setError("Erro ao deletar a conta. Tente novamente.");
+      if (!userId || !token) {
+        setError("Usuário não autenticado.");
+        return;
       }
+
+      await api.delete(`/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setSuccess("Conta deletada com sucesso!");
+      logout();
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (error) {
+      console.error("Erro ao deletar a conta:", error);
+      setError("Erro ao deletar a conta. Tente novamente.");
     }
   };
 
@@ -136,25 +151,35 @@ const MinhaConta = () => {
                 id="password"
                 value={form.password}
                 onChange={handleChange}
+                required
               />
               <button
                 type="button"
                 className="absolute right-3 top-9 text-gray-600"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    className="bi bi-eye" viewBox="0 0 16 16">
-                    <path d="..." />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    className="bi bi-eye-slash" viewBox="0 0 16 16">
-                    <path d="..." />
-                  </svg>
-                )}
+                {showPassword ? "Ocultar" : "Mostrar"}
               </button>
             </div>
+
+            <div className="relative">
+              <Input
+                label="Confirmar Senha"
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-9 text-gray-600"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? "Ocultar" : "Mostrar"}
+              </button>
+            </div>
+
             <Button type="submit" className="w-full">
               Atualizar Dados
             </Button>
@@ -167,10 +192,46 @@ const MinhaConta = () => {
           <Button
             type="button"
             className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
-            onClick={handleDeleteAccount}
+            onClick={() => setShowDeleteModal(true)}
           >
             Deletar Conta
           </Button>
+
+          {showDeleteModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-2xl w-full max-w-md">
+                <h2 className="text-xl font-bold text-center text-red-600 mb-4">
+                  Confirmação de Exclusão
+                </h2>
+                <p className="text-center text-gray-700 mb-4">
+                  Para confirmar a exclusão da conta, digite <strong>"DELETAR"</strong> abaixo:
+                </p>
+                <Input
+                  type="text"
+                  value={deleteInput}
+                  onChange={(e) => setDeleteInput(e.target.value)}
+                  placeholder="Digite DELETAR"
+                />
+                <div className="flex justify-between mt-6">
+                  <Button
+                    className="bg-gray-300 hover:bg-gray-400 text-black"
+                    onClick={() => {
+                      setShowDeleteModal(false);
+                      setDeleteInput("");
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                    onClick={handleDeleteAccount}
+                  >
+                    Confirmar Exclusão
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
