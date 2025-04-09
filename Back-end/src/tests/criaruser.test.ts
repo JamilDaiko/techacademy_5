@@ -123,11 +123,24 @@ describe("Testes de Usuário e Login", () => {
         .set("Authorization", `Bearer ${token1}`)
         .send({
           name: "Jamil Editado",
-          user: { id: String(user1.id) }, // <-- Aqui converte para string
+          user: { id: String(user1.id) },
         });
 
       expect(res.status).toBe(200);
       expect(res.body.name).toBe("Jamil Editado");
+    });
+
+    it("Deve retornar erro ao tentar editar com campos obrigatórios ausentes", async () => {
+      const res = await request(app)
+        .put(`/users/${user1.id}`)
+        .set("Authorization", `Bearer ${token1}`)
+        .send({
+          name: "", // Campo obrigatório
+          user: { id: String(user1.id) },
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.message).toMatch(/nome é obrigatório/i);
     });
   });
 });

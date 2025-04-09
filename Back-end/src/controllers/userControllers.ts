@@ -47,12 +47,9 @@ export const updateUser = async (
   res: Response
 ) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
     const userId = req.params.id;
-    const authenticatedUserId = req.body.user?.user?.id; // <- Aqui está o pulo do gato
-
-    console.log("userId param:", userId);
-    console.log("authenticatedUserId middleware:", authenticatedUserId);
+    const authenticatedUserId = req.body.user?.user?.id;
 
     if (String(userId) !== String(authenticatedUserId)) {
       return res
@@ -65,8 +62,13 @@ export const updateUser = async (
       return res.status(404).json({ error: "User not found" });
     }
 
-    if (name && name !== "") user.name = name;
-    if (email && email !== "") user.email = email;
+    // 🚨 Validação obrigatória
+    if (typeof name === "string" && name.trim() === "") {
+      return res.status(400).json({ message: "Nome é obrigatório" });
+    }
+
+    // Atualização condicional
+    if (name) user.name = name;
     if (password && password !== "") user.password = password;
 
     await user.save();
