@@ -45,35 +45,21 @@ const validateCommentData = (
   }
 };
 
-/**
- * Função principal que faz a criação do comentário no banco de dados
- */
 export const addCommentService = async (
   token: string,
   bookId: string,
   comment: string,
   score: number
 ) => {
-  // Valida o token e extrai o userId
-  const userId = validateTokenAndGetUserId(token);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
+  const userId = decoded.id;
 
-  // Valida os dados de comentário
-  validateCommentData(bookId, comment, score);
+  const newAssessment = await AssessmentModel.create({
+    comment,
+    score,
+    bookId: Number(bookId),
+    userId,
+  });
 
-  try {
-    // Cria a entrada de avaliação (comentário e nota)
-    const newEntry = await AssessmentModel.create({
-      userId,
-      bookId,
-      score,
-      comment,
-    });
-
-    return newEntry; // Retorna a nova entrada criada
-  } catch (error) {
-    throw {
-      status: 500,
-      message: "Erro ao processar sua solicitação. Tente novamente mais tarde.",
-    };
-  }
+  return newAssessment;
 };

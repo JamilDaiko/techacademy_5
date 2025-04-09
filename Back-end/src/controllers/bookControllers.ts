@@ -1,5 +1,7 @@
+import AssessmentModel from "../models/AssessmentModel";
 import BookModel from "../models/BookModel";
 import { Request, Response } from "express";
+import UserModel from "../models/UserModel";
 
 // método que busca todos com paginação
 export const getAllBooks = async (req: Request, res: Response) => {
@@ -67,10 +69,9 @@ export const getBookById = async (
   return res.json(book);
 };
 
-// método que adiciona um livro
 export const addBook = async (req: Request, res: Response) => {
   try {
-    const { image, title, description, date_published } = req.body;
+    const { image, title, description, date_published, assessment } = req.body;
 
     if (!image || !title || !description || !date_published) {
       return res.status(400).json({
@@ -79,7 +80,6 @@ export const addBook = async (req: Request, res: Response) => {
       });
     }
 
-    // Garantir que a data está no formato correto
     const parsedDate = new Date(date_published);
     if (isNaN(parsedDate.getTime())) {
       return res.status(400).json({ error: "Formato de data inválido." });
@@ -92,7 +92,38 @@ export const addBook = async (req: Request, res: Response) => {
       date_published: parsedDate,
     });
 
-    res.status(201).json(newBook);
+    // Se tiver assessment no corpo da requisição, cria a avaliação
+    if (assessment) {
+      const { score, comment, userId } = assessment;
+
+      if (typeof score !== "number" || score < 1 || score > 10 || !userId) {
+        return res.status(400).json({
+          error: "Avaliação inválida. Verifique score (1-10) e userId.",
+        });
+      }
+
+      await AssessmentModel.create({
+        bookId: newBook.id,
+        userId,
+        score,
+        comment,
+      });
+    }
+
+    // Agora busca o livro completo, com avaliações incluídas
+    const fullBook = await BookModel.findByPk(newBook.id, {
+      include: [
+        {
+          model: AssessmentModel,
+          as: "assessments",
+          include: [
+            { model: UserModel, as: "user", attributes: ["id", "name"] },
+          ],
+        },
+      ],
+    });
+
+    res.status(201).json(fullBook);
   } catch (error) {
     console.error("Erro ao adicionar o livro:", error);
     res.status(500).json({ error: "Erro interno ao adicionar o livro." });
