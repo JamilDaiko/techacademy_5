@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Button } from "../components/components/ui/button";
 import { Input } from "../components/components/ui/input";
 import {
@@ -22,12 +23,12 @@ type Livro = {
 
 type Autor = {
   id: number;
-  nome: string;
+  name: string;
 };
 
 type Categoria = {
   id: number;
-  nome: string;
+  name: string;
 };
 
 const Livros = () => {
@@ -47,46 +48,37 @@ const Livros = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const livrosSalvos = JSON.parse(localStorage.getItem("livros") || "[]");
-    const autoresSalvos = JSON.parse(localStorage.getItem("autores") || "[]");
-    const categoriasSalvas = JSON.parse(localStorage.getItem("categorias") || "[]");
+  const API = "http://localhost:3000"; // Altere se necessário
 
-    setLivros(livrosSalvos);
-    setAutores(autoresSalvos);
-    setCategorias(categoriasSalvas);
+  useEffect(() => {
+    fetchLivros();
+    fetchAutores();
+    fetchCategorias();
   }, []);
 
-  const salvarLocalStorage = (lista: Livro[]) => {
-    localStorage.setItem("livros", JSON.stringify(lista));
+  const fetchLivros = async () => {
+    const res = await axios.get(`${API}/books`);
+    setLivros(res.data);
   };
 
-  const handleSubmit = () => {
-    if (editingId !== null) {
-      const atualizados = livros.map((livro) =>
-        livro.id === editingId ? { id: editingId, ...form } : livro
-      );
-      setLivros(atualizados);
-      salvarLocalStorage(atualizados);
-    } else {
-      const novoLivro: Livro = {
-        id: Date.now(),
-        ...form,
-      };
-      const atualizados = [...livros, novoLivro];
-      setLivros(atualizados);
-      salvarLocalStorage(atualizados);
-    }
+  const fetchAutores = async () => {
+    const res = await axios.get(`${API}/author`);
+    setAutores(res.data);
+  };
 
-    setForm({
-      titulo: "",
-      autorId: 0,
-      categoriaId: 0,
-      comentario: "",
-      score: 0,
-      descricao: "",
-    });
-    setEditingId(null);
+  const fetchCategorias = async () => {
+    const res = await axios.get(`${API}/categories`);
+    setCategorias(res.data);
+  };
+
+  const handleSubmit = async () => {
+    if (editingId !== null) {
+      await axios.put(`${API}/books/${editingId}`, form);
+    } else {
+      await axios.post(`${API}/books`, form);
+    }
+    fetchLivros();
+    resetForm();
     setOpen(false);
   };
 
@@ -103,17 +95,28 @@ const Livros = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    const atualizados = livros.filter((livro) => livro.id !== id);
-    setLivros(atualizados);
-    salvarLocalStorage(atualizados);
+  const handleDelete = async (id: number) => {
+    await axios.delete(`${API}/books/${id}`);
+    fetchLivros();
+  };
+
+  const resetForm = () => {
+    setForm({
+      titulo: "",
+      autorId: 0,
+      categoriaId: 0,
+      comentario: "",
+      score: 0,
+      descricao: "",
+    });
+    setEditingId(null);
   };
 
   const getAutorNome = (id: number) =>
-    autores.find((a) => a.id === id)?.nome || "";
+    autores.find((a) => a.id === id)?.name || "";
 
   const getCategoriaNome = (id: number) =>
-    categorias.find((c) => c.id === id)?.nome || "";
+    categorias.find((c) => c.id === id)?.name || "";
 
   const renderStars = (score: number) => {
     const fullStars = Math.floor(score / 2);
@@ -121,17 +124,21 @@ const Livros = () => {
     const emptyStars = 5 - fullStars - halfStar;
 
     const stars = [];
-
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />);
+      stars.push(
+        <Star key={`full-${i}`} className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />
+      );
     }
     if (halfStar) {
-      stars.push(<StarHalf key="half" className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />);
+      stars.push(
+        <StarHalf key="half" className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />
+      );
     }
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<StarOff key={`empty-${i}`} className="text-gray-400 w-5 h-5 inline" />);
+      stars.push(
+        <StarOff key={`empty-${i}`} className="text-gray-400 w-5 h-5 inline" />
+      );
     }
-
     return stars;
   };
 
@@ -144,12 +151,8 @@ const Livros = () => {
         <CardContent className="p-8 text-center md:text-left rounded-lg">
           <h2 className="text-2xl text-black mb-4 font-light">📘 Cadastro de Livros</h2>
           <p className="text-black mb-4 font-light">
-            Aqui você pode cadastrar os seus livros favoritos, deixar um comentário sobre a obra, escolher o autor e a categoria correspondente.
+            Cadastre livros, comente, avalie e relacione com autor e categoria!
           </p>
-          <p className="text-black mb-4 font-light">
-            Caso o autor ou categoria que você deseja não esteja na lista, vá até o menu do site e acesse as páginas <strong>Autor</strong> e <strong>Categoria</strong> para fazer o cadastro deles antes de retornar aqui.
-          </p>
-          <p className="text-black font-light">Boa leitura e aproveite a experiência! 📚</p>
         </CardContent>
       </Card>
 
@@ -169,23 +172,27 @@ const Livros = () => {
               onChange={(e) => setForm({ ...form, titulo: e.target.value })}
             />
             <select
-              className="w-full p-2 border rounded"
-              value={form.autorId}
+              className="w-full p-2 border rounded text-black"
+              value={form.autorId || ""}
               onChange={(e) => setForm({ ...form, autorId: Number(e.target.value) })}
             >
-              <option value={0}>Selecione um autor</option>
+              <option value="">Selecione um autor</option>
               {autores.map((autor) => (
-                <option key={autor.id} value={autor.id}>{autor.nome}</option>
+                <option key={autor.id} value={autor.id}>
+                  {autor.name}
+                </option>
               ))}
             </select>
             <select
-              className="w-full p-2 border rounded"
-              value={form.categoriaId}
+              className="w-full p-2 border rounded text-black"
+              value={form.categoriaId || ""}
               onChange={(e) => setForm({ ...form, categoriaId: Number(e.target.value) })}
             >
-              <option value={0}>Selecione uma categoria</option>
+              <option value="">Selecione uma categoria</option>
               {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                <option key={categoria.id} value={categoria.id}>
+                  {categoria.name}
+                </option>
               ))}
             </select>
             <textarea
@@ -229,14 +236,11 @@ const Livros = () => {
                 <p className="text-gray-800">Autor: <span className="font-medium">{getAutorNome(livro.autorId)}</span></p>
                 <p className="text-gray-800">Categoria: <span className="font-medium">{getCategoriaNome(livro.categoriaId)}</span></p>
 
-                {livro.score !== undefined && (
-                  <p className="text-gray-700 mt-2 flex items-center gap-2">
-                    <span className="text-sm">⭐ Nota:</span>
-                    <span className="flex items-center">{renderStars(livro.score)}</span>
-                    <span className="text-sm font-semibold ml-1">({livro.score}/10)</span>
-                  </p>
-                )}
-
+                <p className="text-gray-700 mt-2 flex items-center gap-2">
+                  <span className="text-sm">⭐ Nota:</span>
+                  <span className="flex items-center">{renderStars(livro.score)}</span>
+                  <span className="text-sm font-semibold ml-1">({livro.score}/10)</span>
+                </p>
                 {livro.descricao && (
                   <p className="text-gray-700 mt-2">📖 {livro.descricao}</p>
                 )}
