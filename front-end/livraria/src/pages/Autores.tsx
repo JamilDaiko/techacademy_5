@@ -7,14 +7,14 @@ import fundoCardSobre from "../assets/fundo-cardsobre.jpg";
 
 type Autor = {
   id: number;
-  nome: string;
+  name: string;
 };
 
-const API_URL = "http://localhost:3000/Authors"; // Atualize para a URL da sua API de autores
+const API_URL = "http://localhost:3000/authors"; // Atualize para a URL da sua API de autores
 
 const Autores = () => {
   const [autores, setAutores] = useState<Autor[]>([]);
-  const [form, setForm] = useState<Omit<Autor, "id">>({ nome: "" });
+  const [form, setForm] = useState<Omit<Autor, "id">>({ name: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -43,14 +43,14 @@ const Autores = () => {
       });
     }
 
-    setForm({ nome: "" });
+    setForm({ name: "" });
     setEditingId(null);
     setOpen(false);
     fetchAutores();
   };
 
   const handleEdit = (autor: Autor) => {
-    setForm({ nome: autor.nome });
+    setForm({ name: autor.name });
     setEditingId(autor.id);
     setOpen(true);
   };
@@ -88,8 +88,8 @@ const Autores = () => {
             <h2 className="text-lg font-semibold">{editingId ? "Editar Autor" : "Adicionar Autor"}</h2>
             <Input
               placeholder="Nome do Autor"
-              value={form.nome}
-              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
             <Button onClick={handleSubmit} className="w-full">
               {editingId ? "Atualizar" : "Cadastrar"}
@@ -108,7 +108,7 @@ const Autores = () => {
               className="border p-4 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white"
             >
               <div className="flex-1">
-                <h3 className="text-xl font-semibold">{autor.nome}</h3>
+                <h3 className="text-xl font-semibold">{autor.name}</h3>
                 <p className="text-lg text-gray-600 mt-2 italic">
                   ✅ Autor cadastrado com sucesso! Agora vá até a aba <strong>Categoria</strong> e cadastre um gênero.
                   Depois vá em <strong>Livros</strong> para vincular o autor e categoria, e deixar um comentário!
