@@ -16,7 +16,7 @@ type Livro = {
   title: string;
   autorId: number;
   categoriaId: number;
-  comentario: string;
+  comment: string;
   score: number;
   description: string;
 };
@@ -40,7 +40,7 @@ const Livros = () => {
     title: "",
     autorId: 0,
     categoriaId: 0,
-    comentario: "",
+    comment: "",
     score: 0,
     description: "",
   });
@@ -103,7 +103,7 @@ const Livros = () => {
       title: livro.title,
       autorId: livro.autorId,
       categoriaId: livro.categoriaId,
-      comentario: livro.comentario,
+      comment: livro.comment,
       score: livro.score,
       description: livro.description,
     });
@@ -121,7 +121,7 @@ const Livros = () => {
       title: "",
       autorId: 0,
       categoriaId: 0,
-      comentario: "",
+      comment: "",
       score: 0,
       description: "",
     });
@@ -213,8 +213,8 @@ const Livros = () => {
             </select>
             <textarea
               placeholder="Comentário sobre o livro"
-              value={form.comentario}
-              onChange={(e) => setForm({ ...form, comentario: e.target.value })}
+              value={form.comment}
+              onChange={(e) => setForm({ ...form, comment: e.target.value })}
               className="w-full border rounded-md p-2 text-sm text-gray-700"
             />
             <Input
@@ -260,8 +260,8 @@ const Livros = () => {
                 {livro.description && (
                   <p className="text-gray-700 mt-2">📖 {livro.description}</p>
                 )}
-                {livro.comentario && (
-                  <p className="italic text-gray-600 mt-2">💬 {livro.comentario}</p>
+                {livro.comment && (
+                  <p className="italic text-gray-600 mt-2">💬 {livro.comment}</p>
                 )}
               </div>
               <div className="space-x-2">
