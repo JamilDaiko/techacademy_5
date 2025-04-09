@@ -72,15 +72,31 @@ const Livros = () => {
   };
 
   const handleSubmit = async () => {
-    if (editingId !== null) {
-      await axios.put(`${API}/books/${editingId}`, form);
-    } else {
-      await axios.post(`${API}/books`, form);
+    const token = localStorage.getItem("token");
+  
+    try {
+      if (editingId !== null) {
+        await axios.put(`${API}/books/${editingId}`, form, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } else {
+        await axios.post(`${API}/books`, form, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+  
+      fetchLivros();
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      console.error("Erro ao salvar livro:", error.response?.data || error.message);
     }
-    fetchLivros();
-    resetForm();
-    setOpen(false);
   };
+  
 
   const handleEdit = (livro: Livro) => {
     setForm({
