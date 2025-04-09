@@ -71,24 +71,17 @@ export const getBookById = async (
 
 export const addBook = async (req: Request, res: Response) => {
   try {
-    const { title, description, date_published, assessment } = req.body;
+    const { title, description, assessment } = req.body;
 
-    if (!title || !description || !date_published) {
+    if (!title || !description) {
       return res.status(400).json({
-        error:
-          "Os campos title, description e date_published são obrigatórios.",
+        error: "Os campos title e description são obrigatórios.",
       });
-    }
-
-    const parsedDate = new Date(date_published);
-    if (isNaN(parsedDate.getTime())) {
-      return res.status(400).json({ error: "Formato de data inválido." });
     }
 
     const newBook = await BookModel.create({
       title,
       description,
-      date_published: parsedDate,
     });
 
     // Se tiver assessment no corpo da requisição, cria a avaliação
