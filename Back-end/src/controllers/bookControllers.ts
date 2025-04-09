@@ -71,12 +71,12 @@ export const getBookById = async (
 
 export const addBook = async (req: Request, res: Response) => {
   try {
-    const { image, title, description, date_published, assessment } = req.body;
+    const { title, description, date_published, assessment } = req.body;
 
-    if (!image || !title || !description || !date_published) {
+    if (!title || !description || !date_published) {
       return res.status(400).json({
         error:
-          "Os campos image, title, description e date_published são obrigatórios.",
+          "Os campos title, description e date_published são obrigatórios.",
       });
     }
 
@@ -86,7 +86,6 @@ export const addBook = async (req: Request, res: Response) => {
     }
 
     const newBook = await BookModel.create({
-      image,
       title,
       description,
       date_published: parsedDate,
