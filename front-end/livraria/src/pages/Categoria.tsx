@@ -10,7 +10,7 @@ type Categoria = {
   name: string;
 };
 
-const API_URL = "http://localhost:3000/categories"; // Altere para a URL da sua API
+const API_URL = "http://localhost:3000/categories";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -23,30 +23,47 @@ const Categorias = () => {
   }, []);
 
   const fetchCategorias = async () => {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    setCategorias(data);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar categorias. Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setCategorias(data);
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
+    }
   };
 
   const handleSubmit = async () => {
-    if (editingId !== null) {
-      await fetch(`${API_URL}/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form }),
-      });
-    } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+    try {
+      const token = localStorage.getItem("token");
+      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
+      const method = editingId ? "PUT" : "POST";
+
+      await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(form),
       });
-    }
 
-    setForm({ name: "" });
-    setEditingId(null);
-    setOpen(false);
-    fetchCategorias();
+      setForm({ name: "" });
+      setEditingId(null);
+      setOpen(false);
+      fetchCategorias();
+    } catch (error) {
+      console.error("Erro ao salvar categoria:", error);
+    }
   };
 
   const handleEdit = (categoria: Categoria) => {
@@ -56,8 +73,20 @@ const Categorias = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    fetchCategorias();
+    try {
+      const token = localStorage.getItem("token");
+
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      fetchCategorias();
+    } catch (error) {
+      console.error("Erro ao excluir categoria:", error);
+    }
   };
 
   return (
@@ -84,7 +113,9 @@ const Categorias = () => {
             <Button variant="default">Nova Categoria</Button>
           </DialogTrigger>
           <DialogContent className="space-y-4">
-            <h2 className="text-lg font-semibold">{editingId ? "Editar Categoria" : "Adicionar Categoria"}</h2>
+            <h2 className="text-lg font-semibold">
+              {editingId ? "Editar Categoria" : "Adicionar Categoria"}
+            </h2>
             <Input
               placeholder="Nome da Categoria"
               value={form.name}
@@ -114,8 +145,12 @@ const Categorias = () => {
                 </p>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => handleEdit(categoria)}>Editar</Button>
-                <Button variant="destructive" onClick={() => handleDelete(categoria.id)}>Excluir</Button>
+                <Button variant="outline" onClick={() => handleEdit(categoria)}>
+                  Editar
+                </Button>
+                <Button variant="destructive" onClick={() => handleDelete(categoria.id)}>
+                  Excluir
+                </Button>
               </div>
             </div>
           ))}
