@@ -17,20 +17,12 @@ Book.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    date_published: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
   },
