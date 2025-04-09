@@ -3,12 +3,15 @@ import {
   getAllBooks,
   getBookById,
   addBook,
+  deleteBook,
 } from "../controllers/bookControllers";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get("/books", getAllBooks); // com paginação
-router.get("/books/:id", getBookById); // busca por ID
-router.post("/books/addBook", addBook); // novo livro
+router.get("/books", authMiddleware, getAllBooks); // com paginação
+router.get("/books/:id", authMiddleware, getBookById); // busca por ID
+router.post("/books/", authMiddleware, addBook);
+router.delete("/books/:id", authMiddleware, deleteBook); // deletar livro por ID
 
 export default router;

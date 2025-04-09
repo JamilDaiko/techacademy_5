@@ -129,3 +129,50 @@ export const addBook = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Erro interno ao adicionar o livro." });
   }
 };
+
+// Atualizar livro
+export const updateBook = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const { image, title, description, date_published } = req.body;
+    const book = await BookModel.findByPk(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ error: "Livro não encontrado" });
+    }
+
+    await book.update({
+      image,
+      title,
+      description,
+      date_published: new Date(date_published),
+    });
+
+    return res.json(book);
+  } catch (error) {
+    console.error("Erro ao atualizar livro:", error);
+    res.status(500).json({ error: "Erro interno ao atualizar o livro." });
+  }
+};
+
+// Deletar livro
+export const deleteBook = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const book = await BookModel.findByPk(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ error: "Livro não encontrado" });
+    }
+
+    await book.destroy();
+    return res.json({ message: "Livro deletado com sucesso" });
+  } catch (error) {
+    console.error("Erro ao deletar livro:", error);
+    res.status(500).json({ error: "Erro interno ao deletar o livro." });
+  }
+};
