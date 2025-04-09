@@ -1,6 +1,6 @@
 // src/services/autor.service.ts
 
-const API_URL = "http://localhost:3000/Authors";
+const API_URL = "http://localhost:3000/author";
 
 export const AutorService = {
   listar: async () => {
@@ -8,7 +8,7 @@ export const AutorService = {
     return response.json();
   },
 
-  criar: async (autor: { nome: string }) => {
+  criar: async (autor: { name: string }) => {
     const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -17,7 +17,7 @@ export const AutorService = {
     return response.json();
   },
 
-  atualizar: async (id: number, autor: { nome: string }) => {
+  atualizar: async (id: number, autor: { name: string }) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
