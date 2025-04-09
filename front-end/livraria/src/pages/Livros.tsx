@@ -13,12 +13,12 @@ import { Star, StarHalf, StarOff } from "lucide-react";
 
 type Livro = {
   id: number;
-  titulo: string;
+  title: string;
   autorId: number;
   categoriaId: number;
   comentario: string;
   score: number;
-  descricao: string;
+  description: string;
 };
 
 type Autor = {
@@ -37,12 +37,12 @@ const Livros = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   const [form, setForm] = useState<Omit<Livro, "id">>({
-    titulo: "",
+    title: "",
     autorId: 0,
     categoriaId: 0,
     comentario: "",
     score: 0,
-    descricao: "",
+    description: "",
   });
 
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -100,12 +100,12 @@ const Livros = () => {
 
   const handleEdit = (livro: Livro) => {
     setForm({
-      titulo: livro.titulo,
+      title: livro.title,
       autorId: livro.autorId,
       categoriaId: livro.categoriaId,
       comentario: livro.comentario,
       score: livro.score,
-      descricao: livro.descricao,
+      description: livro.description,
     });
     setEditingId(livro.id);
     setOpen(true);
@@ -118,12 +118,12 @@ const Livros = () => {
 
   const resetForm = () => {
     setForm({
-      titulo: "",
+      title: "",
       autorId: 0,
       categoriaId: 0,
       comentario: "",
       score: 0,
-      descricao: "",
+      description: "",
     });
     setEditingId(null);
   };
@@ -184,8 +184,8 @@ const Livros = () => {
             </h2>
             <Input
               placeholder="Título"
-              value={form.titulo}
-              onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
             <select
               className="w-full p-2 border rounded text-black"
@@ -227,8 +227,8 @@ const Livros = () => {
             />
             <textarea
               placeholder="Descrição do livro"
-              value={form.descricao}
-              onChange={(e) => setForm({ ...form, descricao: e.target.value })}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="w-full border rounded-md p-2 text-sm text-gray-700"
             />
             <Button onClick={handleSubmit} className="w-full">
@@ -248,7 +248,7 @@ const Livros = () => {
               className="border p-4 rounded-lg shadow-sm flex justify-between items-start"
             >
               <div>
-                <h3 className="text-xl font-semibold">{livro.titulo}</h3>
+                <h3 className="text-xl font-semibold">{livro.title}</h3>
                 <p className="text-gray-800">Autor: <span className="font-medium">{getAutorNome(livro.autorId)}</span></p>
                 <p className="text-gray-800">Categoria: <span className="font-medium">{getCategoriaNome(livro.categoriaId)}</span></p>
 
@@ -257,8 +257,8 @@ const Livros = () => {
                   <span className="flex items-center">{renderStars(livro.score)}</span>
                   <span className="text-sm font-semibold ml-1">({livro.score}/10)</span>
                 </p>
-                {livro.descricao && (
-                  <p className="text-gray-700 mt-2">📖 {livro.descricao}</p>
+                {livro.description && (
+                  <p className="text-gray-700 mt-2">📖 {livro.description}</p>
                 )}
                 {livro.comentario && (
                   <p className="italic text-gray-600 mt-2">💬 {livro.comentario}</p>
