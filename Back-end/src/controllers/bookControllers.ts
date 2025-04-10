@@ -128,7 +128,7 @@ export const updateBook = async (
   res: Response
 ) => {
   try {
-    const { image, title, description, date_published } = req.body;
+    const { title, description } = req.body;
     const book = await BookModel.findByPk(req.params.id);
 
     if (!book) {
@@ -136,10 +136,8 @@ export const updateBook = async (
     }
 
     await book.update({
-      image,
       title,
       description,
-      date_published: new Date(date_published),
     });
 
     return res.json(book);
