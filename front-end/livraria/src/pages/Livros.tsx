@@ -57,9 +57,23 @@ const Livros = () => {
   }, []);
 
   const fetchLivros = async () => {
-    const res = await axios.get(`${API}/books`);
-    setLivros(res.data);
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(`${API}/books`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log("Resposta da API de livros:", res.data);
+  
+      setLivros(res.data.data); // 👈 isso agora pega o array de livros corretamente
+    } catch (error) {
+      console.error("Erro ao buscar livros:", error.response?.data || error.message);
+      setLivros([]); // evita travar a UI
+    }
   };
+  
 
   const fetchAutores = async () => {
     const res = await axios.get(`${API}/author`);
@@ -67,9 +81,19 @@ const Livros = () => {
   };
 
   const fetchCategorias = async () => {
-    const res = await axios.get(`${API}/categories`);
-    setCategorias(res.data);
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(`${API}/categories`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategorias(res.data);
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error.response?.data || error.message);
+    }
   };
+  
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
@@ -112,9 +136,18 @@ const Livros = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await axios.delete(`${API}/books/${id}`);
+  const token = localStorage.getItem("token");
+  try {
+    await axios.delete(`${API}/books/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     fetchLivros();
-  };
+  } catch (error) {
+    console.error("Erro ao deletar livro:", error.response?.data || error.message);
+  }
+};
 
   const resetForm = () => {
     setForm({
