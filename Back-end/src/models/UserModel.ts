@@ -21,6 +21,18 @@ class UserModel extends Model {
   }
 }
 
+export interface UserAttributes {
+  id?: number;
+  name: string;
+  email: string;
+  password: string;
+  cpf: string;
+}
+
+export interface UserInstance extends Model<UserAttributes>, UserAttributes {
+  validatePassword(password: string): Promise<boolean>;
+}
+
 UserModel.init(
   {
     id: {

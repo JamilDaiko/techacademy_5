@@ -5,12 +5,13 @@ import {
   updateAuthor,
   deleteAuthor,
 } from "../controllers/authorController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = Router();
 
-router.get("/author", getAllAuthor);
-router.post("/author", createAuthor);
-router.put("/author/:id", updateAuthor);
-router.delete("/author/:id", deleteAuthor);
+router.get("/author", authMiddleware, getAllAuthor);
+router.post("/author", authMiddleware, createAuthor);
+router.put("/author/:id", authMiddleware, updateAuthor);
+router.delete("/author/:id", authMiddleware, deleteAuthor);
 
 export default router;

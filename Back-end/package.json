@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "migrate": "sequelize-cli db:migrate --url 'mysql://root:@localhost/projetotec5'",
+    "migrate:test": "sequelize-cli db:migrate --url 'mysql://root:@localhost/projetotec5_test'"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +21,9 @@
     "@types/node": "^22.13.5",
     "@types/sequelize": "^4.28.20",
     "@types/supertest": "^6.0.3",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
+    "sequelize-cli": "^6.6.2",
     "sequelize-mock": "^0.10.2",
     "supertest": "^7.1.0",
     "ts-jest": "^29.3.1",
