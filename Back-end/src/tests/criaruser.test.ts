@@ -3,13 +3,13 @@
 import request from "supertest";
 import app from "../app";
 import sequelize from "../config/database";
-import UserModel from "../models/UserModel";
+import UserModel, { UserInstance } from "../models/UserModel";
 
 describe("Testes de Usuário e Login", () => {
-  let user1: any;
-  let user2: any;
-  let token1: string;
-  let token2: string;
+  let user1: InstanceType<typeof UserModel>;
+  let user2: InstanceType<typeof UserModel>;
+  let token1: string = "";
+  let token2: string = "";
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
@@ -48,13 +48,11 @@ describe("Testes de Usuário e Login", () => {
   });
 
   test("Usuário 1 deve ser criado corretamente", async () => {
-    expect(user1).toBeDefined();
     expect(user1.name).toBe("Jamil Teste");
     expect(await user1.validatePassword("J234568@")).toBe(true);
   });
 
   test("Usuário 2 deve ser criado corretamente", async () => {
-    expect(user2).toBeDefined();
     expect(user2.name).toBe("Outro Usuário");
   });
 
