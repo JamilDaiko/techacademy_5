@@ -8,7 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   userName: string | null;
   fetchUserName: () => Promise<void>;
-  loading: boolean; // ✅ novo estado
+  loading: boolean; 
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (savedToken) {
       setToken(savedToken);
     }
-    setLoading(false); // ✅ termina o carregamento
+    setLoading(false); 
   }, []);
 
   const login = (newToken: string) => {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: !!token,
         userName,
         fetchUserName,
-        loading, // ✅ exportando o loading
+        loading, 
       }}
     >
       {children}

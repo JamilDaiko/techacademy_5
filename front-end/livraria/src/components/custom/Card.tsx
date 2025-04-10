@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 interface CustomCardProps {
-  image: string; // Propriedade para a imagem
-  title: string; // Título do livro
-  author: string; // Autor do livro
-  genre: string; // Gênero do livro
-  description: string; // Descrição do livro
+  image: string; 
+  title: string; 
+  author: string; 
+  genre: string;
+  description: string; 
 }
 
 export function CustomCard({ image, title, author, genre, description }: CustomCardProps) {

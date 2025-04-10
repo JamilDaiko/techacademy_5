@@ -1,7 +1,7 @@
-// src/services/categoriaService.ts
+
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/categories"; // ajuste se sua rota for diferente
+const API_URL = "http://localhost:3000/categories"; 
 
 export const getCategorias = () => axios.get(API_URL);
 export const createCategoria = (nome: string) => axios.post(API_URL, { name: nome });

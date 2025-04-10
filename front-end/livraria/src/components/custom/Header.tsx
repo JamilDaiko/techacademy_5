@@ -25,7 +25,7 @@ const Header: React.FC = () => {
     { label: "Início", path: "/" },
     { label: "Livros", path: "/livros" },
     { label: "Autores", path: "/autores" },
-    { label: "Categoria", path: "/categoria" }, // <- Alterado aqui
+    { label: "Categoria", path: "/categoria" }, 
     { label: "Sobre", path: "/sobre" },
     { label: "Contato", path: "/contato" },
     { label: "Minha Conta", path: "/minha-conta" },
@@ -34,13 +34,13 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white/10 backdrop-blur-lg shadow-lg border-b border-white rounded-b-[40px] gap-2.5 flex justify-between items-center py-4 px-6">
       <nav className="flex items-center justify-between w-full">
-        {/* Logo */}
+        
         <Link to="/" className="flex items-center gap-2">
           <img src={logoBook} alt="Logo" className="h-18 w-auto" />
           <span className="hidden sm:block font-bold text-lg text-black">ECO LIVRARIA</span>
         </Link>
 
-        {/* Menu Hamburguer (Mobile) */}
+        
         <button
           className="md:hidden text-black focus:outline-none"
           onClick={toggleMenu}
@@ -56,7 +56,7 @@ const Header: React.FC = () => {
           )}
         </button>
 
-        {/* Desktop Menu */}
+        
         <ul className="hidden md:flex space-x-8 text-lg font-light text-black items-center">
           {menuItems.map((item) => (
             <li key={item.label}>
@@ -73,7 +73,7 @@ const Header: React.FC = () => {
           )}
         </ul>
 
-        {/* Mobile Menu */}
+        
         {isMenuOpen && (
           <ul className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-b-lg flex flex-col space-y-4 text-lg font-light text-black p-4 md:hidden z-50">
             {menuItems.map((item) => (
@@ -85,7 +85,7 @@ const Header: React.FC = () => {
         )}
       </nav>
 
-      {/* Botão de Logout */}
+      
       <button
         onClick={handleLogout}
         className="bg-black text-white px-3 py-1 rounded-full hover:bg-red-600 text-sm"
