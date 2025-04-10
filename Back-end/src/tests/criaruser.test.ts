@@ -3,7 +3,7 @@
 import request from "supertest";
 import app from "../app";
 import sequelize from "../config/database";
-import UserModel, { UserInstance } from "../models/UserModel";
+import UserModel from "../models/UserModel";
 
 describe("Testes de Usuário e Login", () => {
   let user1: InstanceType<typeof UserModel>;

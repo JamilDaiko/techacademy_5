@@ -1,14 +1,18 @@
+import {
+  DataTypes,
+  Model,
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+} from "sequelize";
 import sequelize from "../config/database";
-import { DataTypes, Model } from "sequelize";
-import BookModel from "./BookModel";
-import Book from "./BookModel";
 
-class Categories extends Model {
-  static findByIdAndUpdate(id: string, body: any, arg2: { new: boolean }) {
-    throw new Error("Method not implemented.");
-  }
-  id: number | undefined;
-  categoria: string | undefined;
+class Categories extends Model<
+  InferAttributes<Categories>,
+  InferCreationAttributes<Categories>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 Categories.init(
@@ -29,4 +33,5 @@ Categories.init(
     tableName: "categories",
   }
 );
+
 export default Categories;

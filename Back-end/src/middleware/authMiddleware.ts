@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyToken } from "../utils/jwt";
+import { JwtPayload } from "../types/jwtPayload";
 
 export const authMiddleware = (
   req: Request,
@@ -8,19 +9,22 @@ export const authMiddleware = (
 ) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
-  console.log("Token recebido:", token); // <-- Adicione isso para depuração
+  console.log("Token recebido:", token);
 
   if (!token) {
     return res.status(401).json({ error: "Access denied. No token" });
   }
 
   try {
-    const decoded: any = verifyToken(token);
-    console.log("Token decodificado:", decoded); // <-- Verifica se decodificou certo
+    const decoded = verifyToken(token) as JwtPayload;
+
+    console.log("Token decodificado:", decoded);
+
     req.body.user = decoded;
+
     next();
   } catch (error) {
-    console.error("Erro na verificação do token:", error); // <-- Log do erro real
+    console.error("Erro na verificação do token:", error);
     return res.status(401).json({ error: "Access denied. Invalid token" });
   }
 };

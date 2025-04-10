@@ -1,36 +1,34 @@
 import sequelize from "../config/database";
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "sequelize";
 import bcrypt from "bcrypt";
 
-class UserModel extends Model {
-  static deleteMany(arg0: {}) {
-    throw new Error("Method not implemented.");
-  }
-  id: number | undefined;
-  name: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
-  cpf: string | undefined;
+class UserModel extends Model<
+  InferAttributes<UserModel>,
+  InferCreationAttributes<UserModel>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare email: string;
+  declare password: string;
+  declare cpf: string;
 
   public async validatePassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password!);
+    return await bcrypt.compare(password, this.password);
   }
 
   public async hashPassword() {
-    this.password = await bcrypt.hash(this.password!, 10);
+    this.password = await bcrypt.hash(this.password, 10);
   }
-}
 
-export interface UserAttributes {
-  id?: number;
-  name: string;
-  email: string;
-  password: string;
-  cpf: string;
-}
-
-export interface UserInstance extends Model<UserAttributes>, UserAttributes {
-  validatePassword(password: string): Promise<boolean>;
+  static deleteMany(arg0: {}) {
+    throw new Error("Method not implemented.");
+  }
 }
 
 UserModel.init(

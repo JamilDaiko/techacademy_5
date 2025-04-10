@@ -1,6 +1,8 @@
 import UserModel from "../models/UserModel";
 import { cpf as cpfValidator } from "cpf-cnpj-validator";
+import { ValidationError } from "sequelize";
 
+// Valida se todos os campos foram preenchidos
 const validateFields = (
   name: string,
   email: string,
@@ -12,14 +14,15 @@ const validateFields = (
   }
 };
 
+// Valida o formato do e-mail
 export const validateEmail = (email: string) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
-
   if (!emailRegex.test(email)) {
     throw new Error("E-mail inválido");
   }
 };
 
+// Valida a força da senha
 export const validatePassword = (password: string) => {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -31,18 +34,16 @@ export const validatePassword = (password: string) => {
   }
 };
 
+// Valida o CPF usando biblioteca externa
 export const validateCPF = (cpf: string): boolean => {
-  console.log("Validando CPF:", cpf); // Depuração
   const isValid = cpfValidator.isValid(cpf);
-  console.log("Resultado da validação:", isValid);
-
   if (!isValid) {
     throw new Error("CPF inválido.");
   }
-
   return true;
 };
 
+// Verifica se já existe um e-mail cadastrado
 const checkIfEmailExists = async (email: string) => {
   const existingUser = await UserModel.findOne({ where: { email } });
   if (existingUser) {
@@ -50,6 +51,7 @@ const checkIfEmailExists = async (email: string) => {
   }
 };
 
+// Serviço principal de criação de usuário
 export const createUser = async (
   name: string,
   email: string,
@@ -57,7 +59,7 @@ export const createUser = async (
   cpf: string
 ) => {
   validateFields(name, email, password, cpf);
-  validateEmail(email); // Adicionada validação de e-mail
+  validateEmail(email);
   validatePassword(password);
   validateCPF(cpf);
   await checkIfEmailExists(email);

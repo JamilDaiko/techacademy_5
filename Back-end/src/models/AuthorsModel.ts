@@ -1,9 +1,18 @@
 import sequelize from "../config/database";
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+} from "sequelize";
 
-class Authors extends Model {
-  id: number | undefined;
-  name: string | undefined;
+class Authors extends Model<
+  InferAttributes<Authors>,
+  InferCreationAttributes<Authors>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 Authors.init(

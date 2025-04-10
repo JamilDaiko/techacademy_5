@@ -1,18 +1,27 @@
 import sequelize from "../config/database";
-import { DataTypes, Model, BelongsToManyAddAssociationsMixin } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+  BelongsToManyAddAssociationsMixin,
+} from "sequelize";
 
 import AssessmentModel from "./AssessmentModel";
 
-class Book extends Model {
-  id: number | undefined;
-  title: string | undefined;
-  description: string | undefined;
-  date_published: Date | undefined;
+class Book extends Model<
+  InferAttributes<Book, { omit: "assessments" }>, // tudo que o model tem
+  InferCreationAttributes<Book, { omit: "assessments" }> // tudo que precisa pra criar
+> {
+  declare id: CreationOptional<number>;
+  declare title: string;
+  declare description: string;
 
-  public assessments?: AssessmentModel[];
+  declare assessments?: AssessmentModel[];
 
-  public addAuthors!: BelongsToManyAddAssociationsMixin<any, number>;
-  public addCategories!: BelongsToManyAddAssociationsMixin<any, number>;
+  declare addAuthors: BelongsToManyAddAssociationsMixin<any, number>;
+  declare addCategories: BelongsToManyAddAssociationsMixin<any, number>;
 }
 
 Book.init(
