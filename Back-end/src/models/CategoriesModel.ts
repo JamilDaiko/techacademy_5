@@ -29,14 +29,4 @@ Categories.init(
     tableName: "categories",
   }
 );
-
-BookModel.belongsToMany(Categories, {
-  through: "books_categories",
-  as: "categories",
-});
-Categories.belongsToMany(Book, {
-  through: "books_categories",
-  as: "books",
-});
-
 export default Categories;

@@ -3,6 +3,7 @@ import BookModel from "../models/BookModel";
 import { Request, Response } from "express";
 import UserModel from "../models/UserModel";
 import AuthorsModel from "../models/AuthorsModel";
+import CategoriesModel from "../models/CategoriesModel";
 
 // método que busca todos com paginação
 export const getAllBooks = async (req: Request, res: Response) => {
@@ -72,19 +73,29 @@ export const getBookById = async (
 
 export const addBook = async (req: Request, res: Response) => {
   try {
-    const { title, description, assessment, authorIds } = req.body;
+    const { title, description, authorIds, categoryIds, assessment } = req.body;
 
-    if (!title || !description || !authorIds?.length) {
+    // Validação dos campos obrigatórios
+    if (!title || !description || !authorIds?.length || !categoryIds?.length) {
       return res.status(400).json({
-        error: "Campos title, description e authorIds são obrigatórios.",
+        error:
+          "Campos title, description, authorIds e categoryIds são obrigatórios.",
       });
     }
 
-    const newBook = await BookModel.create({ title, description });
+    // Cria o livro
+    const newBook = await BookModel.create({
+      title,
+      description,
+    });
 
     // Relaciona os autores existentes
     await newBook.addAuthors(authorIds);
 
+    // Relaciona as categorias existentes
+    await newBook.addCategories(categoryIds);
+
+    // Cria avaliação se for enviada
     if (assessment) {
       const { score, comment, userId } = assessment;
 
@@ -102,6 +113,7 @@ export const addBook = async (req: Request, res: Response) => {
       });
     }
 
+    // Busca o livro completo com autores, categorias e avaliações
     const fullBook = await BookModel.findByPk(newBook.id, {
       include: [
         {
@@ -110,19 +122,28 @@ export const addBook = async (req: Request, res: Response) => {
           attributes: ["id", "name"],
         },
         {
+          model: CategoriesModel,
+          as: "categories",
+          attributes: ["id", "name"],
+        },
+        {
           model: AssessmentModel,
           as: "assessments",
           include: [
-            { model: UserModel, as: "user", attributes: ["id", "name"] },
+            {
+              model: UserModel,
+              as: "user",
+              attributes: ["id", "name"],
+            },
           ],
         },
       ],
     });
 
-    res.status(201).json(fullBook);
+    return res.status(201).json(fullBook);
   } catch (error) {
-    console.error("Erro ao adicionar o livro:", error);
-    res.status(500).json({ error: "Erro interno ao adicionar o livro." });
+    console.error("Erro ao adicionar livro:", error);
+    return res.status(500).json({ error: "Erro interno ao adicionar livro." });
   }
 };
 
