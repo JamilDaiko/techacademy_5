@@ -1,5 +1,5 @@
 import sequelize from "../config/database";
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, BelongsToManyAddAssociationsMixin } from "sequelize";
 import AssessmentModel from "./AssessmentModel";
 
 class Book extends Model {
@@ -8,6 +8,7 @@ class Book extends Model {
   description: string | undefined;
   date_published: Date | undefined;
   public assessments?: AssessmentModel[];
+  public addAuthors!: BelongsToManyAddAssociationsMixin<any, number>;
 }
 
 Book.init(

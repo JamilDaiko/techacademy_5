@@ -6,6 +6,7 @@ import categoryRoutes from "./routes/categoriesRoute";
 import assessmentRoutes from "./routes/assessmentRoutes";
 import authorRoutes from "./routes/authorRoutes";
 import loginRoutes from "./routes/loginRoutes";
+import "./models/associations";
 
 const app = express();
 

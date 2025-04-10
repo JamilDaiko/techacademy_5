@@ -2,6 +2,7 @@ import AssessmentModel from "../models/AssessmentModel";
 import BookModel from "../models/BookModel";
 import { Request, Response } from "express";
 import UserModel from "../models/UserModel";
+import AuthorsModel from "../models/AuthorsModel";
 
 // método que busca todos com paginação
 export const getAllBooks = async (req: Request, res: Response) => {
@@ -71,20 +72,19 @@ export const getBookById = async (
 
 export const addBook = async (req: Request, res: Response) => {
   try {
-    const { title, description, assessment } = req.body;
+    const { title, description, assessment, authorIds } = req.body;
 
-    if (!title || !description) {
+    if (!title || !description || !authorIds?.length) {
       return res.status(400).json({
-        error: "Os campos title e description são obrigatórios.",
+        error: "Campos title, description e authorIds são obrigatórios.",
       });
     }
 
-    const newBook = await BookModel.create({
-      title,
-      description,
-    });
+    const newBook = await BookModel.create({ title, description });
 
-    // Se tiver assessment no corpo da requisição, cria a avaliação
+    // Relaciona os autores existentes
+    await newBook.addAuthors(authorIds);
+
     if (assessment) {
       const { score, comment, userId } = assessment;
 
@@ -102,9 +102,13 @@ export const addBook = async (req: Request, res: Response) => {
       });
     }
 
-    // Agora busca o livro completo, com avaliações incluídas
     const fullBook = await BookModel.findByPk(newBook.id, {
       include: [
+        {
+          model: AuthorsModel,
+          as: "authors",
+          attributes: ["id", "name"],
+        },
         {
           model: AssessmentModel,
           as: "assessments",
