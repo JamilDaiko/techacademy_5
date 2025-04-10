@@ -31,6 +31,27 @@ export const getAllBooks = async (req: Request, res: Response) => {
     const { rows: books, count: total } = await BookModel.findAndCountAll({
       limit: limitNumber,
       offset,
+      include: [
+        {
+          model: AuthorsModel,
+          as: "authors",
+          attributes: ["id", "name"],
+        },
+        {
+          model: CategoriesModel,
+          as: "categories",
+          attributes: ["id", "name"],
+        },
+        {
+          association: "assessments",
+          include: [
+            {
+              association: "user",
+              attributes: ["id", "name"], // Inclui apenas os campos id e name do usuário
+            },
+          ],
+        },
+      ],
     });
 
     res.json({
@@ -53,6 +74,16 @@ export const getBookById = async (
 ) => {
   const book = await BookModel.findByPk(req.params.id, {
     include: [
+      {
+        model: AuthorsModel,
+        as: "authors",
+        attributes: ["id", "name"],
+      },
+      {
+        model: CategoriesModel,
+        as: "categories",
+        attributes: ["id", "name"],
+      },
       {
         association: "assessments",
         include: [
