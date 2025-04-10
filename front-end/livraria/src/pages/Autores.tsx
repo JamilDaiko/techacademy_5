@@ -10,7 +10,7 @@ type Autor = {
   name: string;
 };
 
-const API_URL = "http://localhost:3000/author"; 
+const API_URL = "http://localhost:3000/author";
 
 const Autores = () => {
   const [autores, setAutores] = useState<Autor[]>([]);
@@ -18,30 +18,34 @@ const Autores = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     fetchAutores();
   }, []);
 
   const fetchAutores = async () => {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     setAutores(data);
   };
 
   const handleSubmit = async () => {
-    if (editingId !== null) {
-      await fetch(`${API_URL}/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-    } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-    }
+    const method = editingId !== null ? "PUT" : "POST";
+    const url = editingId !== null ? `${API_URL}/${editingId}` : API_URL;
+
+    await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(form),
+    });
 
     setForm({ name: "" });
     setEditingId(null);
@@ -56,7 +60,12 @@ const Autores = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     fetchAutores();
   };
 

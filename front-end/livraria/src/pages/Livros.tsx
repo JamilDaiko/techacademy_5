@@ -73,9 +73,37 @@ const Livros = () => {
   };
 
   const fetchAutores = async () => {
-    const res = await axios.get(`${API}/author`);
-    setAutores(res.data);
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      console.error("Token não encontrado no localStorage");
+      return;
+    }
+  
+    try {
+      const res = await axios.get(`${API}/author`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (Array.isArray(res.data)) {
+        setAutores(res.data);
+      } else {
+        console.error("Resposta inesperada:", res.data);
+        setAutores([]);
+      }
+  
+    } catch (error) {
+      console.error(
+        "Erro ao buscar autores:",
+        error.response?.data || error.message
+      );
+      setAutores([]); 
+    }
   };
+  
+  
 
   const fetchCategorias = async () => {
     const token = localStorage.getItem("token");
@@ -181,7 +209,7 @@ const Livros = () => {
   };
 
   const renderStars = (score: number) => {
-    if (isNaN(score)) return null;
+    if (typeof score !== 'number' || isNaN(score)) return null;
 
     const fullStars = Math.floor(score / 2);
     const halfStar = score % 2 >= 1 ? 1 : 0;
