@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios"; // Importa o Axios
+import axios from "axios"; 
 import { Input } from "../components/components/ui/input";
 import { validateEmail, validateCPF, validatePassword } from "../utils/validations";
 
@@ -47,7 +47,7 @@ const Register = () => {
       setPassword("");
       setConfirmPassword("");
     } catch (error) {
-      // Verifica se o erro é do tipo AxiosError
+      
       if (axios.isAxiosError(error)) {
         setError(error.response?.data?.error || "Erro ao cadastrar usuário");
       } else {

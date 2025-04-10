@@ -2,7 +2,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 interface PdfViewerProps {
-  pdfUrl: string; // URL ou caminho do arquivo PDF
+  pdfUrl: string;
 }
 
 export default function PdfViewer({ pdfUrl }: PdfViewerProps) {

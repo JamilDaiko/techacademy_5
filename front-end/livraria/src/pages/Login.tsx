@@ -6,7 +6,7 @@ import { validateEmail } from "../utils/validations";
 import { maskJs } from "mask-js";
 import api from "../services/api";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext"; // Importando contexto de autenticação
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [tab, setTab] = useState("login");
@@ -20,7 +20,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth(); // Pegando a função de login do contexto
+  const { login } = useAuth(); 
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ const Login = () => {
     setSuccess("");
 
     if (tab === "signup") {
-      // Validações antes do cadastro
+      
       if (!form.fullName.trim()) return setError("O nome completo é obrigatório!");
       if (!validateEmail(form.email)) return setError("E-mail inválido!");
       if (form.password !== form.confirmPassword) return setError("As senhas não coincidem!");
@@ -67,14 +67,14 @@ const Login = () => {
           password: form.password,
         });
         const token = response.data.token;
-        const userId = response.data.userId; // <- Pega o userId retornado pela API
+        const userId = response.data.userId; 
 
-        login(token); // Salva o token no contexto
-        localStorage.setItem("token", token); // <- Armazena o token no localStorage
-        localStorage.setItem("userId", userId); // <- Salva o userId no localStorage
+        login(token); 
+        localStorage.setItem("token", token); 
+        localStorage.setItem("userId", userId); 
 
         console.log("Login bem-sucedido, redirecionando para a página inicial...");
-        navigate("/"); // Redireciona para a rota inicial
+        navigate("/"); 
       } catch (err) {
         setError(axios.isAxiosError(err) ? err.response?.data?.error || "Erro ao fazer login." : "Erro desconhecido.");
       }

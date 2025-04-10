@@ -1,8 +1,8 @@
 import React from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string; // Opcional, caso você queira usar labels
-  errorMessage?: string; // Para mensagens de erro
+  label?: string; 
+  errorMessage?: string; 
 }
 
 export const Input: React.FC<InputProps> = ({ label, errorMessage, ...props }) => {

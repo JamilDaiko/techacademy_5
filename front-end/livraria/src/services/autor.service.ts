@@ -1,4 +1,3 @@
-// src/services/autor.service.ts
 
 const API_URL = "http://localhost:3000/author";
 

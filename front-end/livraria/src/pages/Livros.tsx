@@ -14,8 +14,8 @@ import { Star, StarHalf, StarOff } from "lucide-react";
 type Livro = {
   id: number;
   title: string;
-  autorId: number;
-  categoriaId: number;
+  authorIds: number[];
+  categoryIds: number[];
   comment: string;
   score: number;
   description: string;
@@ -35,11 +35,10 @@ const Livros = () => {
   const [livros, setLivros] = useState<Livro[]>([]);
   const [autores, setAutores] = useState<Autor[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-
   const [form, setForm] = useState<Omit<Livro, "id">>({
     title: "",
-    autorId: 0,
-    categoriaId: 0,
+    authorIds: [],
+    categoryIds: [],
     comment: "",
     score: 0,
     description: "",
@@ -47,8 +46,7 @@ const Livros = () => {
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
-
-  const API = "http://localhost:3000"; // Altere se necessário
+  const API = "http://localhost:3000";
 
   useEffect(() => {
     fetchLivros();
@@ -64,16 +62,15 @@ const Livros = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-  
-      console.log("Resposta da API de livros:", res.data);
-  
-      setLivros(res.data.data); // 👈 isso agora pega o array de livros corretamente
+      setLivros(res.data.data);
     } catch (error) {
-      console.error("Erro ao buscar livros:", error.response?.data || error.message);
-      setLivros([]); // evita travar a UI
+      console.error(
+        "Erro ao buscar livros:",
+        error.response?.data || error.message
+      );
+      setLivros([]);
     }
   };
-  
 
   const fetchAutores = async () => {
     const res = await axios.get(`${API}/author`);
@@ -90,43 +87,52 @@ const Livros = () => {
       });
       setCategorias(res.data);
     } catch (error) {
-      console.error("Erro ao buscar categorias:", error.response?.data || error.message);
+      console.error(
+        "Erro ao buscar categorias:",
+        error.response?.data || error.message
+      );
     }
   };
-  
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-  
+    console.log("Dados enviados:", form);
+
     try {
       if (editingId !== null) {
         await axios.put(`${API}/books/${editingId}`, form, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
       } else {
         await axios.post(`${API}/books`, form, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
       }
-  
+
       fetchLivros();
       resetForm();
       setOpen(false);
-    } catch (error) {
-      console.error("Erro ao salvar livro:", error.response?.data || error.message);
+    } catch (error: any) {
+      console.error(
+        "Erro ao salvar livro:",
+        error.response?.data || error.message
+      );
+      alert(
+        "Erro ao salvar livro: " +
+          (error.response?.data?.message || error.message)
+      );
     }
   };
-  
 
   const handleEdit = (livro: Livro) => {
     setForm({
       title: livro.title,
-      autorId: livro.autorId,
-      categoriaId: livro.categoriaId,
+      authorIds: livro.authorIds,
+      categoryIds: livro.categoryIds,
       comment: livro.comment,
       score: livro.score,
       description: livro.description,
@@ -136,24 +142,27 @@ const Livros = () => {
   };
 
   const handleDelete = async (id: number) => {
-  const token = localStorage.getItem("token");
-  try {
-    await axios.delete(`${API}/books/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    fetchLivros();
-  } catch (error) {
-    console.error("Erro ao deletar livro:", error.response?.data || error.message);
-  }
-};
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(`${API}/books/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchLivros();
+    } catch (error) {
+      console.error(
+        "Erro ao deletar livro:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   const resetForm = () => {
     setForm({
       title: "",
-      autorId: 0,
-      categoriaId: 0,
+      authorIds: [],
+      categoryIds: [],
       comment: "",
       score: 0,
       description: "",
@@ -161,13 +170,19 @@ const Livros = () => {
     setEditingId(null);
   };
 
-  const getAutorNome = (id: number) =>
-    autores.find((a) => a.id === id)?.name || "";
+  const getAutorNomes = (authors: { id: number; name: string }[]) => {
+    if (!Array.isArray(authors)) return "";
+    return authors.map((a) => a.name).join(", ");
+  };
 
-  const getCategoriaNome = (id: number) =>
-    categorias.find((c) => c.id === id)?.name || "";
+  const getCategoriaNomes = (categories: { id: number; name: string }[]) => {
+    if (!Array.isArray(categories)) return "";
+    return categories.map((c) => c.name).join(", ");
+  };
 
   const renderStars = (score: number) => {
+    if (isNaN(score)) return null;
+
     const fullStars = Math.floor(score / 2);
     const halfStar = score % 2 >= 1 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStar;
@@ -175,12 +190,20 @@ const Livros = () => {
     const stars = [];
     for (let i = 0; i < fullStars; i++) {
       stars.push(
-        <Star key={`full-${i}`} className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />
+        <Star
+          key={`full-${i}`}
+          className="text-yellow-500 w-5 h-5 inline"
+          fill="currentColor"
+        />
       );
     }
     if (halfStar) {
       stars.push(
-        <StarHalf key="half" className="text-yellow-500 w-5 h-5 inline" fill="currentColor" />
+        <StarHalf
+          key="half"
+          className="text-yellow-500 w-5 h-5 inline"
+          fill="currentColor"
+        />
       );
     }
     for (let i = 0; i < emptyStars; i++) {
@@ -198,7 +221,9 @@ const Livros = () => {
         style={{ backgroundImage: `url(${fundoCardSobre})` }}
       >
         <CardContent className="p-8 text-center md:text-left rounded-lg">
-          <h2 className="text-2xl text-black mb-4 font-light">📘 Cadastro de Livros</h2>
+          <h2 className="text-2xl text-black mb-4 font-light">
+            📘 Cadastro de Livros
+          </h2>
           <p className="text-black mb-4 font-light">
             Cadastre livros, comente, avalie e relacione com autor e categoria!
           </p>
@@ -222,8 +247,10 @@ const Livros = () => {
             />
             <select
               className="w-full p-2 border rounded text-black"
-              value={form.autorId || ""}
-              onChange={(e) => setForm({ ...form, autorId: Number(e.target.value) })}
+              value={form.authorIds?.[0] || ""}
+              onChange={(e) =>
+                setForm({ ...form, authorIds: [Number(e.target.value)] })
+              }
             >
               <option value="">Selecione um autor</option>
               {autores.map((autor) => (
@@ -232,10 +259,13 @@ const Livros = () => {
                 </option>
               ))}
             </select>
+
             <select
               className="w-full p-2 border rounded text-black"
-              value={form.categoriaId || ""}
-              onChange={(e) => setForm({ ...form, categoriaId: Number(e.target.value) })}
+              value={form.categoryIds?.[0] ?? ""}
+              onChange={(e) =>
+                setForm({ ...form, categoryIds: [Number(e.target.value)] })
+              }
             >
               <option value="">Selecione uma categoria</option>
               {categorias.map((categoria) => (
@@ -244,6 +274,7 @@ const Livros = () => {
                 </option>
               ))}
             </select>
+
             <textarea
               placeholder="Comentário sobre o livro"
               value={form.comment}
@@ -254,14 +285,18 @@ const Livros = () => {
               type="number"
               placeholder="Nota (0 a 10)"
               value={form.score}
-              onChange={(e) => setForm({ ...form, score: Number(e.target.value) })}
+              onChange={(e) =>
+                setForm({ ...form, score: Number(e.target.value) })
+              }
               min={0}
               max={10}
             />
             <textarea
               placeholder="Descrição do livro"
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
               className="w-full border rounded-md p-2 text-sm text-gray-700"
             />
             <Button onClick={handleSubmit} className="w-full">
@@ -282,24 +317,46 @@ const Livros = () => {
             >
               <div>
                 <h3 className="text-xl font-semibold">{livro.title}</h3>
-                <p className="text-gray-800">Autor: <span className="font-medium">{getAutorNome(livro.autorId)}</span></p>
-                <p className="text-gray-800">Categoria: <span className="font-medium">{getCategoriaNome(livro.categoriaId)}</span></p>
-
+                <p className="text-gray-800">
+                  Autor(es):{" "}
+                  <span className="font-medium">
+                    {getAutorNomes(livro.authors)}
+                  </span>
+                </p>
+                <p className="text-gray-800">
+                  Categoria(s):{" "}
+                  <span className="font-medium">
+                    {getCategoriaNomes(livro.categories)}
+                  </span>
+                </p>
                 <p className="text-gray-700 mt-2 flex items-center gap-2">
                   <span className="text-sm">⭐ Nota:</span>
-                  <span className="flex items-center">{renderStars(livro.score)}</span>
-                  <span className="text-sm font-semibold ml-1">({livro.score}/10)</span>
+                  <span className="flex items-center">
+                    {renderStars(livro.score)}
+                  </span>
+                  <span className="text-sm font-semibold ml-1">
+                    ({livro.score}/10)
+                  </span>
                 </p>
                 {livro.description && (
                   <p className="text-gray-700 mt-2">📖 {livro.description}</p>
                 )}
                 {livro.comment && (
-                  <p className="italic text-gray-600 mt-2">💬 {livro.comment}</p>
+                  <p className="italic text-gray-600 mt-2">
+                    💬 {livro.comment}
+                  </p>
                 )}
               </div>
               <div className="space-x-2">
-                <Button variant="outline" onClick={() => handleEdit(livro)}>Editar</Button>
-                <Button variant="destructive" onClick={() => handleDelete(livro.id)}>Excluir</Button>
+                <Button onClick={() => handleEdit(livro)} variant="outline">
+                  Editar
+                </Button>
+                <Button
+                  onClick={() => handleDelete(livro.id)}
+                  variant="destructive"
+                >
+                  Deletar
+                </Button>
               </div>
             </div>
           ))}

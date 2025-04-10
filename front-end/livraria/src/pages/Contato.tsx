@@ -1,6 +1,6 @@
 import { Mail, Github, Instagram } from "lucide-react";
 import { Card, CardContent } from "../components/components/ui/card";
-import fundoCardSobre from "../assets/fundo-cardsobre.jpg"; // mesmo fundo do Sobre
+import fundoCardSobre from "../assets/fundo-cardsobre.jpg"; 
 
 function FaleConosco() {
   return (

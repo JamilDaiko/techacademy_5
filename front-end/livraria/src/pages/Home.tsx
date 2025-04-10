@@ -16,7 +16,7 @@ function Home() {
           <h1 className="text-3xl font-bold text-center text-black">ECO LIVRARIA</h1>
         </div>
 
-        {/* Card Sobre a Livraria (Acima dos 3 cards) */}
+       
         <Card
           className="w-full bg-cover bg-center bg-no-repeat border-white border-none rounded-lg my-16"
           style={{ backgroundImage: `url(${fundoCardSobre})` }}
@@ -27,12 +27,12 @@ function Home() {
               📖 Bem-vindo à Nossa Livraria!
             </p>
             <p className="text-black mb-4 font-light">
-              Aqui você encontra um universo de histórias! Nossa livraria oferece uma seleção incrível de livros, desde clássicos atemporais até os lançamentos mais esperados. E para dar um gostinho do que te espera, logo abaixo você confere três exemplares que fazem parte da nossa estante – e que você pode encontrar diretamente no menu de navegação!
+             📚  Livraria de Reviews! Aqui você mergulha em um espaço feito para amantes da leitura! Nosso site é dedicado a compartilhar informações sobre livros, autores e avaliações. Explore títulos com descrições detalhadas, descubra novos autores, deixe notas para outros leitores e registre seus próprios comentários – assim você ajuda a comunidade e também guarda suas impressões pessoais. Role para baixo e confira alguns dos livros em destaque – e não deixe de explorar mais através do nosso menu de navegação!
             </p>
           </CardContent>
         </Card>
 
-        {/* Três Cards */}
+        
         <div className="flex justify-between flex-wrap w-full">
           <CustomCard
             image={sombras}
@@ -57,7 +57,7 @@ function Home() {
           />
         </div>
 
-        {/* Card Explicando as Páginas */}
+    
         <Card
           className="w-full bg-cover bg-center bg-no-repeat border-white border-none rounded-lg my-16"
           style={{ backgroundImage: `url(${fundoCardSobre})` }}
